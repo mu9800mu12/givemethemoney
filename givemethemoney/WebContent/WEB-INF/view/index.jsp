@@ -9,6 +9,7 @@
 <body>
 	Hello World
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Oauth2.0 권한 승인 받기
 	<br>
 	<button type="button" name="login" value="login" onclick="location.href='/google/oauth/login.do'">loginss4</button>
@@ -21,3 +22,7 @@
 </body>
 </html>
 >>>>>>> origin/practice
+=======
+</body>
+</html>
+>>>>>>> origin/kimbogyu
