@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.ILeaderMapper">
+<select id="staffList" resultType="MemberDTO">
+	select 
+	m.member_no, 
+	m.member_name, 
+	m.member_id, 
+	m.member_email, 
+	m.member_phone, 
+	m.member_team,
+	t.team_name
+	from member m, team t
+	where m.member_team = t.team_no
+</select>
+<select id="myStaffList" parameterType="MemberDTO" resultType="MemberDTO">
+	select
+	member_no,
+	member_name,
+	member_id,
+	member_email,
+	member_phone
+	from member
+	where member_team=#{member_team}
+</select>
+<select id="findTeamName" parameterType="int" resultType="String">
+	select 
+	team_name
+	from team
+	where tema_no=${team_no}
+</select>
+
+<update id="addStaff" parameterType="MemberDTO">
+	update member set
+	member_team = #{member_team}
+	where member_no = #{member_no}
+	
+</update>
+<update id="deleteStaff" parameterType="MemberDTO">
+	update member set
+	member_team = 0
+	where member_no = #{member_no}
+</update>
+</mapper>

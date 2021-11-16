@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	Hello World
-</body>
-</html>
+ <jsp:include page="/WEB-INF/view/templates/header.jsp"></jsp:include>
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            
+<jsp:include page="/WEB-INF/view/templates/footer.jsp"></jsp:include>
