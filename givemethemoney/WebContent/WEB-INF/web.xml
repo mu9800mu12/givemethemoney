@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://Java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
 	<display-name>SpringPRJ</display-name>
 
@@ -34,7 +34,8 @@
 	<!-- WAS 부팅시 설정파일 읽어오기 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:config/context*.xml</param-value>
+		<param-value>classpath*:config/context*.xml
+		</param-value>
 	</context-param>
 
 	<!-- 스프링 프레임워크 사용시 응답 대기용 객체 -->
