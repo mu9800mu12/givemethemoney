@@ -4,13 +4,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%
-	String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
-%>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
+<%
+	String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
+%>
 	<script>
 		alert("<%=msg%>");
 		top.location.href="index.do";

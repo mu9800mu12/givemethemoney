@@ -48,11 +48,13 @@ public class MemberController {
 			session.setAttribute("team_name", team_name);
 			session.setAttribute("member_name", member_name);
 			msg = "로그인 성공했습니다.";
+			model.addAttribute("msg", msg);
+			return "/msgToIndex";
 		}else {
 			msg = "로그인 실패했습니다.";
+			model.addAttribute("msg", msg);
+			return "/member/login";
 		}
-		model.addAttribute("msg", msg);
-		return "/msgToIndex";
 	}
 	@RequestMapping(value = "member/logout")
 	public String logout(HttpServletRequest rep,HttpServletResponse resp, HttpSession session, ModelMap model) {

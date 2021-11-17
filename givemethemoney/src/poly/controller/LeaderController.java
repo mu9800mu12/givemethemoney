@@ -45,6 +45,7 @@ public class LeaderController {
 		MemberDTO mDTO = new MemberDTO();
 		int member_no = Integer.parseInt(req.getParameter("member_no"));
 		mDTO.setMember_no(member_no);
+		session.setAttribute("member_team", 1);
 		int member_team = (int)session.getAttribute("member_team");
 		mDTO.setMember_team(member_team);
 		int res = leaderService.addStaff(mDTO);
