@@ -3,6 +3,7 @@
     
     
     <wb-module deploy-name="SpringPRJ2.0-0.0.1-SNAPSHOT">
+                
         <wb-resource deploy-path="/WEB-INF/web.xml" source-path="/WebContent/WEB-INF/web.xml"/>
                                 
         
