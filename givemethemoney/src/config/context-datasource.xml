@@ -11,6 +11,7 @@
 		destroy-method="close">
 		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.170.103:1521:orcl" />
+<!-- 		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:orcl" /> -->
 		<property name="user" value="CHW" /> <!-- 오라클 계정 : 아이디 -->
 		<property name="password" value="1234" /> <!-- 오라클 계정 : 비밀번호 -->
 		<property name="initialPoolSize" value="5" />
