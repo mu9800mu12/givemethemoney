@@ -9,17 +9,17 @@
 			#{who}, #{secret}, sysdate
 		)
 	</insert>
-	<select id="validate" resultType="certDTO">
-		select * from cert
+	<select id="validate" parameterType="CertDTO" resultType="CertDTO">
+		select who, secret from cert
 		where
 			who=#{who}
-			and secret = #{secret}
+			and secret= #{secret}
 			and when between sysdate -5/24/60 and sysdate
 	</select>
 	<delete id="remove">
 		delete cert where who=#{who} and secret=#{secret}
 	</delete>
-	<delete id="clear">
+	<delete id="clearAll">
 		<![CDATA[
 			delete cert where when < sysdate - 5/24/60
 		]]>

@@ -32,7 +32,7 @@ public class LeaderController {
 	public String myStaffList(HttpServletRequest req, HttpServletResponse resp, HttpSession session, 
 			ModelMap model) throws Exception {
 		MemberDTO mDTO = new MemberDTO();
-		int member_team = 1;
+		String member_team = "1";
 		//int member_team = (int)session.getAttribute("member_team");
 		mDTO.setMember_team(member_team);
 		List<MemberDTO> mList = leaderService.myStaffList(mDTO);
@@ -45,8 +45,8 @@ public class LeaderController {
 		MemberDTO mDTO = new MemberDTO();
 		int member_no = Integer.parseInt(req.getParameter("member_no"));
 		mDTO.setMember_no(member_no);
-		session.setAttribute("member_team", 1);
-		int member_team = (int)session.getAttribute("member_team");
+		session.setAttribute("member_team", "1");
+		String member_team = (String)session.getAttribute("member_team");
 		mDTO.setMember_team(member_team);
 		int res = leaderService.addStaff(mDTO);
 		String msg = "";
@@ -72,6 +72,16 @@ public class LeaderController {
 		}
 		model.addAttribute("msg", msg);
 		return "/leader/msgToMyStaffList";
+	}
+	@RequestMapping(value = "leader/addBlock")
+	public String addBlock(HttpServletRequest req, HttpServletResponse resp) {
+		int member_no =Integer.parseInt( req.getParameter("member_no"));
+		
+		return "/leader/msgToStaffList";
+	}
+	@RequestMapping(value = "leader/deleteBlock")
+	public String deleteBlock(HttpServletRequest req, HttpServletResponse resp) {
+		return "/leader/msgToStaffList";
 	}
 	
 }

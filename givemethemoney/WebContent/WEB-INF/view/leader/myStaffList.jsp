@@ -4,9 +4,24 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <jsp:include page="/WEB-INF/view/templates/tableHeader.jsp"></jsp:include>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quixlab - Bootstrap Admin Dashboard Template by Themefisher.com</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/images/favicon.png">
+    <!-- Custom Stylesheet -->
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<jsp:include page="/WEB-INF/view/templates/sidebar.jsp"></jsp:include>
 <%	
-	session.setAttribute("member_team", 1);
+	session.setAttribute("team_name", "1");
 	List<MemberDTO> mList = (List<MemberDTO>)request.getAttribute("mList");
 	if(mList == null){
 		mList = new ArrayList<MemberDTO>();
@@ -96,4 +111,35 @@ function doDelete(member_no){
             Content body end
         ***********************************-->
               
-<jsp:include page="/WEB-INF/view/templates/tableFooter.jsp"></jsp:include>
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <script src="${pageContext.request.contextPath}/plugins/common/common.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/custom.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/settings.js"></script>
+    <script src="${pageContext.request.contextPath}/js/gleek.js"></script>
+    <script src="${pageContext.request.contextPath}/js/styleSwitcher.js"></script>
+
+    <script src="${pageContext.request.contextPath}/plugins/tables/js/jquery.dataTables.min.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/tables/js/datatable/dataTables.bootstrap4.min.js"></script>
+    <script src="${pageContext.request.contextPath}/plugins/tables/js/datatable-init/datatable-basic.min.js"></script>
+
+</body>
+
+</html>

@@ -5,6 +5,7 @@
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/aop
@@ -12,7 +13,10 @@
     http://www.springframework.org/schema/mvc
     http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/context
-    http://www.springframework.org/schema/context/spring-context.xsd">
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task-3.1.xsd"
+    >
 
 	<!-- 어노테이션 사용하기 -->
 	<mvc:annotation-driven />
@@ -33,7 +37,9 @@
 		base-package="poly.persistance.redis" />
 	<context:component-scan
 		base-package="poly.persistance.mongo" />
-
+	<context:component-scan base-package="poly.service.impl"></context:component-scan>
+	<task:scheduler id="jobScheduler" pool-size="10"/>
+	<task:annotation-driven scheduler="jobScheduler"/>
 	<!-- ViewResolver : 뷰 선택자 -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -61,10 +67,13 @@
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
 		<property name="username" value="ohhanmin000@gmail.com" />
-		<property name="password" value="*cristina27#" />
+		<property name="password" value="ybwtqoctmnuiuppv" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.debug">true</prop>
 			</props>
 		</property>
 	</bean>

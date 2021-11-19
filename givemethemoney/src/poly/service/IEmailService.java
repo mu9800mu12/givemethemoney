@@ -1,8 +1,12 @@
 package poly.service;
 
+import org.springframework.mail.SimpleMailMessage;
+
 public interface IEmailService {
 
-	int send_code(String member_email);
+	void sendSimpleMessage(String member_email, String string, String string2);
+
+	void sendSimpleMessage(SimpleMailMessage message);
 
 
 }

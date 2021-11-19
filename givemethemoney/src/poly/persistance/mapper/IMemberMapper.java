@@ -7,6 +7,7 @@ public interface IMemberMapper {
 
 	MemberDTO login(MemberDTO mDTO);
 
-	String find_email(MemberDTO mDTO);
+	MemberDTO find_email(MemberDTO mDTO);
 
+	int changePassword(MemberDTO mDTO);
 }

@@ -13,7 +13,7 @@
 %>
 	<script>
 		alert("<%=msg%>");
-		top.location.href="index.do";
+		top.location.href="/index.do";
 	</script>
 </body>
 </html>

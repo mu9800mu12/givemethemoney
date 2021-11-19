@@ -1,9 +1,9 @@
 package poly.dto;
 
 public class MemberDTO {
-	private int member_no, member_team;
+	private int member_no;
 	private String member_id, member_name, member_pw, member_email, member_addr1, member_addr2,
-	member_auth, team_name, member_phone;
+	member_auth, team_name, member_phone, member_team;
 	public String getTeam_name() {
 		return team_name;
 	}
@@ -16,10 +16,10 @@ public class MemberDTO {
 	public void setTeam_name(String team_name) {
 		this.team_name = team_name;
 	}
-	public int getMember_team() {
+	public String getMember_team() {
 		return member_team;
 	}
-	public void setMember_team(int member_team) {
+	public void setMember_team(String member_team) {
 		this.member_team = member_team;
 	}
 	private int member_branch;

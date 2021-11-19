@@ -4,10 +4,10 @@ import poly.dto.MemberDTO;
 
 public interface IMemberService{
 
-	String find_email(MemberDTO mDTO);
+	MemberDTO find_email(MemberDTO mDTO);
 
 	MemberDTO login(MemberDTO mDTO);
 
-	boolean changePassword(int member_no);
+	boolean changePassword(MemberDTO mDTO);
 
 }

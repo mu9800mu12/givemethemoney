@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Quixlab - Bootstrap Admin Dashboard Template by Themefisher.com</title>
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/images/favicon.png">
-    <!-- Custom Stylesheet -->
-    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
-</head>
-
-<body>
-
+ <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%
+	int member_no = (int)session.getAttribute("member_no");
+	String member_team = (String)session.getAttribute("member_team");
+	String member_name = (String)session.getAttribute("member_name");
+	String member_auth = (String)session.getAttribute("member_auth");
+%>
     <!--*******************
         Preloader start
     ********************-->
@@ -40,8 +33,8 @@
         <div class="nav-header">
             <div class="brand-logo">
                 <a href="index.html">
-                    <b class="logo-abbr"><img src="${pageContext.request.contextPath}/images/logo.png" alt=""> </b>
-                    <span class="logo-compact"><img src="${pageContext.request.contextPath}//images/logo-compact.png" alt=""></span>
+                    <b class="logo-abbr"><img src="${pageContext.request.contextPath}/images/logo.png" alt=""></b>
+                    <span class="logo-compact"><img src="${pageContext.request.contextPath}/images/logo-compact.png" alt=""></span>
                     <span class="brand-title">
                         <img src="${pageContext.request.contextPath}/images/logo-text.png" alt="">
                     </span>
@@ -218,7 +211,7 @@
                                         <li>
                                             <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock Screen</span></a>
                                         </li>
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                        <li><a href="${pageContext.request.contextPath}/member/logout.do"><i class="icon-key"></i> <span>Logout</span></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -240,20 +233,23 @@
                     <li class="nav-label">Dashboard</li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
+                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">캘린더관리</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./index.html">Home 1</a></li>
-                            <!-- <li><a href="./index-2.html">Home 2</a></li> -->
+                            <li><a href="./index.html">새로운 캘린더</a></li>
+                            <li><a href="./index-2.html">세로운 파트일정</a></li>
+                            <li><a href="./index-2.html">일정 수정</a></li>
+                            <li><a href="./index-2.html">일정 예약/수정</a></li>
+                            
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Layouts</span>
+                            <i class="icon-globe-alt menu-icon"></i><span class="nav-text">인사 관리</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./layout-blank.html">Blank</a></li>
-                            <li><a href="./layout-one-column.html">One Column</a></li>
+                            <li><a href="${pageContext.request.contextPath}/leader/staffList.do">직원 리스트</a></li>
+                            <li><a href="${pageContext.request.contextPath}/leader/myStaffList.do">팀원 리스트</a></li>
                             <li><a href="./layout-two-column.html">Two column</a></li>
                             <li><a href="./layout-compact-nav.html">Compact Nav</a></li>
                             <li><a href="./layout-vertical.html">Vertical</a></li>
@@ -368,9 +364,9 @@
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Pages</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./page-login.html">Login</a></li>
-                            <li><a href="./page-register.html">Register</a></li>
-                            <li><a href="./page-lock.html">Lock Screen</a></li>
+                            <li><a href="${pageContext.request.contextPath}/member/login.do">Login</a></li>
+                            <li><a href="${pageContext.request.contextPath}/">Register</a></li>
+                            <li><a href="${pageContext.request.contextPath}/member/findPassword.do">비밀번호 찾기</a></li>
                             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Error</a>
                                 <ul aria-expanded="false">
                                     <li><a href="./page-error-404.html">Error 404</a></li>
