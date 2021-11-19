@@ -19,14 +19,14 @@
 		)
 	VALUES (
 			(select nvl(max(a.member_no),0)+1 from member a),
-			#{MEMBER_NAME},
-			#{MEMBER_ID},
-			#{MEMBER_PW},
-			#{MEMBER_EMAIL},
-			#{MEMBER_ADDR1},
-			#{MEMBER_ADDR2},
-			'staff',
-			#{MEMBER_PHONE}
+			#{member_name},
+			#{member_id},
+			#{member_pw},
+			#{member_email},
+			#{member_addr1},
+			#{member_addr2},
+			'leader',
+			#{member_phone}
 	)
 </insert>
 
@@ -34,15 +34,15 @@
 <select id="getUserExists" parameterType="UserInfoDTO" resultType="UserInfoDTO">
 	SELECT DECODE(COUNT(1), 0, 'N', 'Y') AS EXISTS_YN
 		FROM MEMBER
-		WHERE MEMBER_EMAIL = #{MEMBER_EMAIL}
+		WHERE MEMBER_EMAIL = #{member_email}
 </select>
 
 <!-- 로그인을 위해 아이디와 비밀번호가 일치하는지 확인하기 -->
 <select id="getUserLoginCheck" parameterType="UserInfoDTO" resultType="UserInfoDTO">
 SELECT MEMBER_ID, MEMBER_NAME, MEMBER_EMAIL
 FROM MEMBER
-WHERE MEMBER_ID =#{MEMBER_ID}
-AND PASSWORD =#{MEMBER_PW}
+WHERE MEMBER_ID =#{member_id}
+AND PASSWORD =#{member_pw}
 </select>
 
 			

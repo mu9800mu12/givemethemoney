@@ -46,6 +46,7 @@ public class UserInfoController {
 			String MEMBER_EMAIL = CmmUtil.nvl(request.getParameter("MEMBER_EMAIL"));
 			String MEMBER_ADDR1 = CmmUtil.nvl(request.getParameter("MEMBER_ADDR1"));
 			String MEMBER_ADDR2 = CmmUtil.nvl(request.getParameter("MEMBER_ADDR2"));
+			String MEMBER_PHONE = CmmUtil.nvl(request.getParameter("MEMBER_PHONE"));
 
 			log.info("MEMBER_ID : " + MEMBER_ID);
 			log.info("MEMBER_NAME : " + MEMBER_NAME);
@@ -53,6 +54,7 @@ public class UserInfoController {
 			log.info("MEMBER_EMAIL : " + MEMBER_EMAIL);
 			log.info("MEMBER_ADDR1 : " + MEMBER_ADDR1);
 			log.info("MEMBER_ADDR2 : " + MEMBER_ADDR2);
+			log.info("MEMBER_PHONE : " + MEMBER_PHONE);
 
 			pDTO = new UserInfoDTO();
 			pDTO.setMember_id(MEMBER_ID);
@@ -61,6 +63,7 @@ public class UserInfoController {
 			pDTO.setMember_email(EncryptUtil.encAES128CBC(MEMBER_EMAIL));
 			pDTO.setMember_addr1(MEMBER_ADDR1);
 			pDTO.setMember_addr2(MEMBER_ADDR2);
+			pDTO.setMember_phone(MEMBER_PHONE);
 
 			// 회원가입
 			int res = userInfoService.insertUserInfo(pDTO);

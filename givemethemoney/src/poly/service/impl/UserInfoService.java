@@ -2,6 +2,7 @@ package poly.service.impl;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import poly.dto.UserInfoDTO;
@@ -11,7 +12,7 @@ import poly.util.CmmUtil;
 
 @Service("UserInfoService")
 public class UserInfoService implements IUserInfoService {
-
+	private Logger log = Logger.getLogger(this.getClass());
 	@Resource(name = "UserInfoMapper")
 	private UserInfoMapper userInfoMapper;
 
@@ -20,7 +21,8 @@ public class UserInfoService implements IUserInfoService {
 
 		// 회원가입 성공 : 1, 아이디중복으로인한 가입취소 : 2, 기타 에러 발생 : 0
 		int res = 0;
-		String member_email= pDTO.getMember_email();
+		String member_email  = pDTO.getMember_email();
+		log.info("member_email서비스 :"+member_email);
 		
 		
 		
@@ -31,7 +33,7 @@ public class UserInfoService implements IUserInfoService {
 
 		// 회원 가입 중복 방지를 위해 DB에서 데이터 조회
 		UserInfoDTO rDTO = userInfoMapper.getUserExists(pDTO);
-
+		log.info("서비스이메일중복확인 rDTO : "+rDTO);
 		// mapper에서 값이 정상적으로 못 넘어오는 경우를 대비하기 위해 사용함
 		if (rDTO == null) {
 			rDTO = new UserInfoDTO();

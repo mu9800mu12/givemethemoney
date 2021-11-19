@@ -51,6 +51,12 @@
          f.addr2.focus();
          return false;
       }
+      
+      if (f.MEMBER_PHONE.value==""){
+          alert("상세주소를 입력하세요.");
+          f.addr2.focus();
+          return false;
+       }
    }
 </script>
 
@@ -90,6 +96,10 @@
 <tr>
    <td>상세</td>
    <td colspan="3"><input type="text" name="MEMBER_ADDR2" style="width:450px"/></td>
+</tr>
+<tr>
+   <td>번호</td>
+   <td colspan="3"><input type="text" name="MEMBER_PHONE" style="width:450px"/></td>
 </tr>
 </table>
 <input type="submit" value="회원가입" />
