@@ -13,5 +13,6 @@ public interface ICertMapper {
 	CertDTO validate(CertDTO certDTO);
 
 	void remove(CertDTO result);
+
 	
 }

@@ -4,24 +4,14 @@
 <mapper namespace="poly.persistance.mapper.ILeaderMapper">
 <select id="staffList" resultType="MemberDTO">
 	select 
-	m.member_no, 
-	m.member_name, 
-	m.member_id, 
-	m.member_email, 
-	m.member_phone, 
-	m.member_team,
-	m.member_approve
-	from member m
+	*
+	from member where member_auth='staff'
 </select>
 <select id="myStaffList" parameterType="MemberDTO" resultType="MemberDTO">
 	select
-	member_no,
-	member_name,
-	member_id,
-	member_email,
-	member_phone
+	*
 	from member
-	where member_team=#{member_team}
+	where member_team=#{member_team} and member_auth='staff'
 </select>
 
 
@@ -29,13 +19,30 @@
 	update member set
 	member_team = #{member_team},
 	member_approve = 'Y'
-	where member_no = #{member_no}
+	where member_no = ${member_no}
 	
 </update>
 <update id="deleteStaff" parameterType="MemberDTO">
 	update member set
 	member_team = '이름을 입력해주세요',
 	member_approve = 'N'
-	where member_no = #{member_no}
+	where member_no = ${member_no}
+</update>
+<select id="blockList" resultType="MemberDTO">
+	select 
+	*
+	from member
+	where member_auth='block'
+</select>
+<update id="addBlock" parameterType="MemberDTO">
+	update member set
+	member_auth = 'block',
+	member_team = '이름을 입력해주세요'
+	where member_no = ${member_no}
+</update>
+<update id="deleteBlock" parameterType="MemberDTO">
+	update member set
+	member_auth = 'staff'
+	where member_no = ${member_no}
 </update>
 </mapper>

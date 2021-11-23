@@ -15,7 +15,8 @@
 			MEMBER_ADDR1,
 			MEMBER_ADDR2,
 			MEMBER_AUTH,
-			MEMBER_PHONE
+			MEMBER_PHONE,
+			MEMBER_SYSDATE
 		)
 	VALUES (
 			(select nvl(max(a.member_no),0)+1 from member a),
@@ -25,8 +26,9 @@
 			#{member_email},
 			#{member_addr1},
 			#{member_addr2},
-			'leader',
-			#{member_phone}
+			#{member_auth},
+			#{member_phone},
+			SYSDATE
 	)
 </insert>
 
@@ -36,6 +38,11 @@
 		FROM MEMBER
 		WHERE MEMBER_EMAIL = #{member_email}
 </select>
+<select id="getIdExists" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+	SELECT DECODE(COUNT(1), 0, 'N', 'Y') AS EXISTS_YN
+		FROM MEMBER
+		WHERE MEMBER_ID = #{member_id}
+</select>
 
 <!-- 로그인을 위해 아이디와 비밀번호가 일치하는지 확인하기 -->
 <select id="getUserLoginCheck" parameterType="UserInfoDTO" resultType="UserInfoDTO">
@@ -44,6 +51,12 @@ FROM MEMBER
 WHERE MEMBER_ID =#{member_id}
 AND PASSWORD =#{member_pw}
 </select>
+<delete id="clearMember">
+	<![CDATA[
+		DELETE FROM member WHERE member_approve='N' and member_auth in('staff','leader')
+		and member_sysdate < TO_CHAR(sysdate - 3, 'yyyy-mm-dd')
+	]]>
+</delete>
 
 			
 			

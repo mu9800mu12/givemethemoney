@@ -32,6 +32,9 @@
 function doDelete(member_no){
 	location.href="/leader/deleteStaff.do?member_no="+member_no
 }
+function doBlock(member_no){
+	location.href="/leader/addBlock.do?member_no="+member_no
+}
 </script>
  <!--**********************************
             Content body start
@@ -65,6 +68,7 @@ function doDelete(member_no){
 										<th>이메일</th>
 										<th>전화번호</th>
 										<th>퇴출</th>
+										<th>블락</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -83,6 +87,9 @@ function doDelete(member_no){
 										<td><%=mDTO.getMember_phone() %></td>
 										<td>
 										<a href="javascript:doDelete('<%=mDTO.getMember_no()%>');">퇴출</a>
+										</td>
+										<td>
+										<a href="javascript:doBlock('<%=mDTO.getMember_no()%>');">블락</a>
 										</td>
 									</tr>
 									<% } %>

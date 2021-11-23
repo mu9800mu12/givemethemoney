@@ -1,5 +1,7 @@
 package poly.service;
 
+
+import poly.dto.MemberDTO;
 import poly.dto.UserInfoDTO;
 
 public interface IUserInfoService {
@@ -8,5 +10,13 @@ public interface IUserInfoService {
 	
 	//로그인을 위해 아이디와 비밀번호가 일치하는지 확인하기
 	int getUserLoginCheck(UserInfoDTO pDTO) throws Exception;
+
+	int overlap_email(UserInfoDTO mDTO) throws Exception;
+
+	int overlap_id(UserInfoDTO mDTO) throws Exception;
+
+	void clearMember();
+
+
 
 }

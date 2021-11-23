@@ -24,15 +24,6 @@
 	<!--**********************************
             Content body start
         ***********************************-->
-<%
-	String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
-	
-%>
-	<script>
-			
-		alert("<%=msg%>");
-		
-	</script>
 	<div class="content-body">
 
 		<div class="row page-titles mx-0">

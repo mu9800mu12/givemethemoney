@@ -1,24 +1,22 @@
 package poly.dto;
 
 public class TeamDTO {
-	private int team_no;
-	private String team_name, team_leader;
-	public int getTeam_no() {
-		return team_no;
+	private String calendar_id, owner_email;
+
+	public String getCalendar_id() {
+		return calendar_id;
 	}
-	public void setTeam_no(int team_no) {
-		this.team_no = team_no;
+
+	public void setCalendar_id(String calendar_id) {
+		this.calendar_id = calendar_id;
 	}
-	public String getTeam_name() {
-		return team_name;
+
+	public String getOwner_email() {
+		return owner_email;
 	}
-	public void setTeam_name(String team_name) {
-		this.team_name = team_name;
+
+	public void setOwner_email(String owner_email) {
+		this.owner_email = owner_email;
 	}
-	public String getTeam_leader() {
-		return team_leader;
-	}
-	public void setTeam_leader(String team_leader) {
-		this.team_leader = team_leader;
-	}
+
 }

@@ -3,9 +3,15 @@ package poly.dto;
 public class MemberDTO {
 	private int member_no;
 	private String member_id, member_name, member_pw, member_email, member_addr1, member_addr2,
-	member_auth, team_name, member_phone, member_team;
+	member_auth, team_name, member_phone, member_team, member_approve;
 	public String getTeam_name() {
 		return team_name;
+	}
+	public String getMember_approve() {
+		return member_approve;
+	}
+	public void setMember_approve(String member_approve) {
+		this.member_approve = member_approve;
 	}
 	public String getMember_phone() {
 		return member_phone;

@@ -42,7 +42,7 @@ public class NoticeController {
 	public String Index(HttpServletRequest req, HttpServletResponse resp) {
 		log.info(this.getClass());
 		
-		return "/index";
+		return "/member/login";
 	}
 	
 	/**

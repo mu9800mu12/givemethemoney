@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import poly.dto.UserInfoDTO;
+import poly.service.ICertService;
 import poly.service.IUserInfoService;
 import poly.util.CmmUtil;
 import poly.util.EncryptUtil;
@@ -22,6 +23,7 @@ public class UserInfoController {
 
 	@Resource(name = "UserInfoService")
 	private IUserInfoService userInfoService;
+
 
 	// 회원가입 화면으로 이동
 	@RequestMapping(value = "user/userRegForm")
@@ -40,14 +42,14 @@ public class UserInfoController {
 		String msg = "";
 
 		try {
-			String MEMBER_ID = CmmUtil.nvl(request.getParameter("MEMBER_ID"));
-			String MEMBER_NAME = CmmUtil.nvl(request.getParameter("MEMBER_NAME"));
-			String MEMBER_PW = CmmUtil.nvl(request.getParameter("MEMBER__PW"));
-			String MEMBER_EMAIL = CmmUtil.nvl(request.getParameter("MEMBER_EMAIL"));
-			String MEMBER_ADDR1 = CmmUtil.nvl(request.getParameter("MEMBER_ADDR1"));
-			String MEMBER_ADDR2 = CmmUtil.nvl(request.getParameter("MEMBER_ADDR2"));
-			String MEMBER_PHONE = CmmUtil.nvl(request.getParameter("MEMBER_PHONE"));
-
+			String MEMBER_ID = CmmUtil.nvl(request.getParameter("member_id"));
+			String MEMBER_NAME = CmmUtil.nvl(request.getParameter("member_name"));
+			String MEMBER_PW = CmmUtil.nvl(request.getParameter("member_pw"));
+			String MEMBER_EMAIL = CmmUtil.nvl(request.getParameter("member_email"));
+			String MEMBER_ADDR1 = CmmUtil.nvl(request.getParameter("addr1"));
+			String MEMBER_ADDR2 = CmmUtil.nvl(request.getParameter("addr2"));
+			String MEMBER_PHONE = CmmUtil.nvl(request.getParameter("member_phone"));
+			String MEMBER_AUTH = CmmUtil.nvl(request.getParameter("member_auth"));
 			log.info("MEMBER_ID : " + MEMBER_ID);
 			log.info("MEMBER_NAME : " + MEMBER_NAME);
 			log.info("MEMBER__PW : " + MEMBER_PW);
@@ -60,16 +62,17 @@ public class UserInfoController {
 			pDTO.setMember_id(MEMBER_ID);
 			pDTO.setMember_name(MEMBER_NAME);
 			pDTO.setMember_pw(EncryptUtil.encHashSHA256(MEMBER_PW));
-			pDTO.setMember_email(EncryptUtil.encAES128CBC(MEMBER_EMAIL));
+			pDTO.setMember_email(MEMBER_EMAIL);
 			pDTO.setMember_addr1(MEMBER_ADDR1);
 			pDTO.setMember_addr2(MEMBER_ADDR2);
 			pDTO.setMember_phone(MEMBER_PHONE);
-
+			pDTO.setMember_auth(MEMBER_AUTH);
 			// 회원가입
 			int res = userInfoService.insertUserInfo(pDTO);
 
 			if (res == 1) {
-				msg = "회원가입되었습니다.";
+				msg = "회원가입되었습니다. 승인까지 최대 3일까지 기다려주세요. ";
+				userInfoService.clearMember();
 			} else if (res == 2) {
 				msg = "이미 가입된 이메일 주소입니다.";
 			} else {
@@ -84,11 +87,10 @@ public class UserInfoController {
 			log.info(this.getClass().getName() + ".insetUserInfo end ! ");
 
 			model.addAttribute("msg", msg);
-			model.addAttribute("pDTO", pDTO);
 
 		}
 
-		return "/user/Msg";
+		return "/msgToHome";
 	}
 	
 	//로그인을 위한 입력 화면으로 이동

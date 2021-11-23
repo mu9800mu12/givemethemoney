@@ -24,4 +24,5 @@
 			delete cert where when < sysdate - 5/24/60
 		]]>
 	</delete>
+
 </mapper>

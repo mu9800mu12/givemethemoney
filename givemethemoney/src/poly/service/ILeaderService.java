@@ -13,5 +13,9 @@ public interface ILeaderService {
 	int addStaff(MemberDTO mDTO) throws Exception;
 
 	int deleteStaff(MemberDTO mDTO) throws Exception;
+	List<MemberDTO> blockList();
 
+	int addBlock(MemberDTO mDTO);
+
+	int deleteBlock(MemberDTO mDTO);
 }

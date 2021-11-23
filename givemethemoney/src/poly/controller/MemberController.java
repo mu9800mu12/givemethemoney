@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jdk.internal.org.jline.utils.Log;
 import poly.dto.CertDTO;
 import poly.dto.MemberDTO;
 import poly.service.ICertService;
 import poly.service.IEmailService;
 import poly.service.IMemberService;
+import poly.util.EncryptUtil;
 
 @Controller
 public class MemberController {
@@ -28,38 +28,37 @@ public class MemberController {
 	private IEmailService emailService;
 	@Resource(name="CertService")
 	private ICertService certService;
+	@RequestMapping(value = "home")
+	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+		return "/home";
+	}
 	@RequestMapping(value = "member/login", method=RequestMethod.GET)
 	public String login(HttpServletRequest req, HttpServletResponse resp) {
 		return "/member/login";
 	}
 	@RequestMapping(value = "member/login", method=RequestMethod.POST)
 	public String login(HttpServletRequest req, HttpServletResponse resp, HttpSession session,
-			ModelMap model) {
+			ModelMap model) throws Exception {
+		if(session.getAttribute("memberinfo") !=null) {
+			session.removeAttribute("memberinfo");
+		}
 		String member_id = req.getParameter("member_id");
 		String member_pw = req.getParameter("member_pw");
 		log.info("member_id : "+ member_id);
 		log.info("member_pw : "+ member_pw);
 		MemberDTO mDTO = new MemberDTO();
-		mDTO.setMember_pw(member_pw);
+		mDTO.setMember_pw(EncryptUtil.encHashSHA256(member_pw));
 		mDTO.setMember_id(member_id);
-		MemberDTO loginDTO = memberService.login(mDTO);
+		MemberDTO member_info = memberService.login(mDTO);
 		String msg = "";
-		if(loginDTO != null) {
-			int member_no = loginDTO.getMember_no();
-			String member_auth = loginDTO.getMember_auth();
-			String member_name = loginDTO.getMember_name();
-			String member_team = loginDTO.getMember_team();
-			session.setAttribute("member_no", member_no);
-			session.setAttribute("member_auth", member_auth);
-			session.setAttribute("member_team", member_team);
-			session.setAttribute("member_name", member_name);
+		if(member_info != null) {
+			session.setAttribute("memberinfo", member_info);
 			msg = "로그인 성공했습니다.";
 			model.addAttribute("msg", msg);
-			return "/msgToIndex";
+			return "/msgToHome";
 		}else {
-			msg = "로그인 실패했습니다.";
-			model.addAttribute("msg", msg);
-			return "/member/login";
+
+			return "redirect:login.do?error=error";
 		}
 	}
 	@RequestMapping(value = "member/logout")
@@ -67,12 +66,10 @@ public class MemberController {
 		session.invalidate();
 		String msg = "로그아웃했습니다.";
 		model.addAttribute("msg", msg);
-		return "/msgToIndex";
+		return "/member/login";
 	}
 	@RequestMapping(value = "member/findPassword", method=RequestMethod.GET)
 	public String findPassword(HttpServletRequest req, HttpServletResponse resp) {
-		
-		
 		return "/member/findPassword";
 	}
 	@RequestMapping(value= "member/findPassword", method=RequestMethod.POST)
@@ -91,17 +88,18 @@ public class MemberController {
 			String secret = certService.generateCertification(ip);
 			log.info("이이피 : "+ip +"인증번호 : "+secret);
 			emailService.sendSimpleMessage(member_email, "일정 관리 시스템 인증번호", "인증번호 : "+ secret);
-			certService.clear();
 			int member_no = find_email.getMember_no();
 			session.setAttribute("member_no", member_no);
 			msg = "이메일로 인증번호를 발송했습니다. 5분 안에 인증 부탁드립니다.";
+			certService.clear();
 			model.addAttribute("msg", msg);
 			model.addAttribute("member_no", member_no);
 			return "/member/certificate";
 		}else {
+			certService.clear();
 			msg = "유효하지 않은 이메일입니다.";
 			model.addAttribute("msg", msg);
-			return "/member/findPassword";
+			return "/member/msgToFindePassword";
 		}
 	}
 	@RequestMapping(value = "member/certificate", method=RequestMethod.GET)
@@ -140,12 +138,12 @@ public class MemberController {
 	}
 	@RequestMapping(value = "member/changePassword", method=RequestMethod.POST)
 	public String changePassword(HttpServletRequest req, ModelMap model,
-			HttpServletResponse resp, HttpSession session) {
+			HttpServletResponse resp, HttpSession session) throws Exception {
 		int member_no = Integer.parseInt(req.getParameter("member_no"));
 		String member_pw = req.getParameter("member_pw");
 		MemberDTO mDTO = new MemberDTO();
 		mDTO.setMember_no(member_no);
-		mDTO.setMember_pw(member_pw);
+		mDTO.setMember_pw(EncryptUtil.encHashSHA256(member_pw));
 		boolean changePassword = memberService.changePassword(mDTO);
 		String msg = "";
 		if(changePassword) {

@@ -1,11 +1,9 @@
- <%@ page language="java" contentType="text/html; charset=UTF-8"
+ <%@page import="poly.dto.MemberDTO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%
-	int member_no = (int)session.getAttribute("member_no");
-	String member_team = (String)session.getAttribute("member_team");
-	String member_name = (String)session.getAttribute("member_name");
-	String member_auth = (String)session.getAttribute("member_auth");
+	MemberDTO mDTO = (MemberDTO)session.getAttribute("memberinfo");
 %>
     <!--*******************
         Preloader start
@@ -250,6 +248,9 @@
                         <ul aria-expanded="false">
                             <li><a href="${pageContext.request.contextPath}/leader/staffList.do">직원 리스트</a></li>
                             <li><a href="${pageContext.request.contextPath}/leader/myStaffList.do">팀원 리스트</a></li>
+                            <li><a href="${pageContext.request.contextPath}/leader/blockList.do">블락 리스트</a></li>
+                            <li><a href="${pageContext.request.contextPath}/master/leaderList.do">리더 리스트</a></li>
+                			
                             <li><a href="./layout-two-column.html">Two column</a></li>
                             <li><a href="./layout-compact-nav.html">Compact Nav</a></li>
                             <li><a href="./layout-vertical.html">Vertical</a></li>

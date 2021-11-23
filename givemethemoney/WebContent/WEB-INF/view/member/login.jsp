@@ -3,6 +3,7 @@
 <html class="h-100" lang="en">
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,12 +17,6 @@
 </head>
 
 <body class="h-100">
-<%
-	String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
-%>
-	<script>
-		alert("<%=msg%>");
-	</script>
     <!--*******************
         Preloader start
     ********************-->
@@ -57,9 +52,14 @@
                                     <div class="form-group">
                                         <input type="password" class="form-control" placeholder="Password" name= "member_pw">
                                     </div>
+                                    <c:if test="${not empty param.error}">
+										<div class="form-group">
+											<font color="FF0000">입력하신 로그인 정보가 맞지 않습니다.</font>
+										</div>
+									</c:if>
                                     <button class="btn login-form__btn submit w-100">Sign In</button>
                                 </form>
-                                <p class="mt-5 login-form__footer">Dont have account? <a href="page-register.html" class="text-primary">Sign Up</a> now</p>
+                                <p class="mt-5 login-form__footer">Dont have account? <a href="${pageContext.request.contextPath}/user/userRegForm.do" class="text-primary">회원가입</a> now</p>
                             </div>
                         </div>
                     </div>
@@ -67,9 +67,6 @@
             </div>
         </div>
     </div>
-    
-
-    
 
     <!--**********************************
         Scripts

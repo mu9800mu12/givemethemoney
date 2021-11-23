@@ -6,7 +6,6 @@
 <head>
 <%
 	String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
-	session.setAttribute("member_team", 1);
 %>
 <meta charset="UTF-8">
 <title>Insert title here</title>

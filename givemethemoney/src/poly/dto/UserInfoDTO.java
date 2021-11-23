@@ -1,7 +1,13 @@
 package poly.dto;
 
 public class UserInfoDTO {
-
+	private String url;
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
 	private String member_no;
 	private String member_name;
 	private String member_id;

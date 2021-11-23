@@ -7,4 +7,5 @@ public interface ICertService {
 	String generateCertification(String ip);
 	void clear();
 	CertDTO validate(CertDTO certDTO);
+
 }

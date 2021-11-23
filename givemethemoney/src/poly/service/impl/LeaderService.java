@@ -42,4 +42,25 @@ public class LeaderService implements ILeaderService{
 		return res;
 	}
 
+	@Override
+	public List<MemberDTO> blockList() {
+		// TODO Auto-generated method stub
+		List<MemberDTO> mList = leaderMapper.blockList();
+		return mList;
+	}
+
+	@Override
+	public int addBlock(MemberDTO mDTO) {
+		// TODO Auto-generated method stub
+		int result = leaderMapper.addBlock(mDTO);
+		return result;
+	}
+
+	@Override
+	public int deleteBlock(MemberDTO mDTO) {
+		// TODO Auto-generated method stub
+		int result = leaderMapper.deleteBlock(mDTO);
+		return result;
+	}
+
 }

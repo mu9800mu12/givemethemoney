@@ -32,9 +32,8 @@ public class LeaderController {
 	public String myStaffList(HttpServletRequest req, HttpServletResponse resp, HttpSession session, 
 			ModelMap model) throws Exception {
 		MemberDTO mDTO = new MemberDTO();
-		String member_team = "1";
-		//int member_team = (int)session.getAttribute("member_team");
-		mDTO.setMember_team(member_team);
+		MemberDTO member_info = (MemberDTO)session.getAttribute("memberinfo");
+		mDTO.setMember_team(member_info.getMember_team());
 		List<MemberDTO> mList = leaderService.myStaffList(mDTO);
 		model.addAttribute("mList", mList);
 		return "leader/myStaffList";
@@ -45,9 +44,8 @@ public class LeaderController {
 		MemberDTO mDTO = new MemberDTO();
 		int member_no = Integer.parseInt(req.getParameter("member_no"));
 		mDTO.setMember_no(member_no);
-		session.setAttribute("member_team", "1");
-		String member_team = (String)session.getAttribute("member_team");
-		mDTO.setMember_team(member_team);
+		MemberDTO member_info = (MemberDTO)session.getAttribute("memberinfo");
+		mDTO.setMember_team(member_info.getMember_team());
 		int res = leaderService.addStaff(mDTO);
 		String msg = "";
 		if(res > 0) {
@@ -73,15 +71,41 @@ public class LeaderController {
 		model.addAttribute("msg", msg);
 		return "/leader/msgToMyStaffList";
 	}
+	@RequestMapping(value = "leader/blockList")
+	public String blockList(HttpServletRequest req, HttpServletResponse resp, ModelMap model) throws Exception{
+		List<MemberDTO> mList = leaderService.blockList();
+		model.addAttribute("mList", mList);
+		return "/leader/blockList";
+	}
 	@RequestMapping(value = "leader/addBlock")
-	public String addBlock(HttpServletRequest req, HttpServletResponse resp) {
-		int member_no =Integer.parseInt( req.getParameter("member_no"));
-		
-		return "/leader/msgToStaffList";
+	public String addBlock(HttpServletRequest req, HttpServletResponse resp, ModelMap model) {
+		int member_no =Integer.parseInt(req.getParameter("member_no"));
+		MemberDTO mDTO = new MemberDTO();
+		mDTO.setMember_no(member_no);
+		int result = leaderService.addBlock(mDTO);
+		String msg = "";
+		if(result >0) {
+			msg = "등록을 완료햇습니다.";
+		}else {
+			msg = "등록에실패했습니다.";
+		}
+		model.addAttribute("msg", msg);
+		return "/leader/msgToMyStaffList";			
 	}
 	@RequestMapping(value = "leader/deleteBlock")
-	public String deleteBlock(HttpServletRequest req, HttpServletResponse resp) {
-		return "/leader/msgToStaffList";
+	public String deleteBlock(HttpServletRequest req, HttpServletResponse resp, ModelMap model) {
+		int member_no = Integer.parseInt(req.getParameter("member_no"));
+		MemberDTO mDTO = new MemberDTO();
+		mDTO.setMember_no(member_no);
+		int result = leaderService.deleteBlock(mDTO);
+		String msg = "";
+		if(result >0) {
+			msg = "등록을 완료햇습니다.";
+		}else {
+			msg = "등록에실패했습니다.";
+		}
+		model.addAttribute("msg", msg);
+		return "/leader/msgToBlockList";
 	}
 	
 }

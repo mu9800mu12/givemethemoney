@@ -15,5 +15,12 @@ public interface ILeaderMapper {
 	int addStaff(MemberDTO mDTO);
 
 	int deleteStaff(MemberDTO mDTO);
+
+
+	int addBlock(MemberDTO mDTO);
+
+	int deleteBlock(MemberDTO mDTO);
+
+	List<MemberDTO> blockList();
 	
 }
