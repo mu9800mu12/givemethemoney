@@ -42,7 +42,7 @@ public class CertService implements ICertService {
 	}
 
 	@Override
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "* * * * * *")
 	public void clear() {
 		certMapper.clearAll();
 	}

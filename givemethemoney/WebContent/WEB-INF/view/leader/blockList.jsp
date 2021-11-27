@@ -97,7 +97,7 @@
                                                 <th>이메일</th>
                                                 <th>전화번호</th>
                                                 <th>팀이름</th>
-                                                <th>팀추가</th>
+                                                <th>블락취소</th>
                                             </tr>
                                         </tfoot>
                                     </table>

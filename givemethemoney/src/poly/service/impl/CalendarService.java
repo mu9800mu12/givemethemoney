@@ -41,7 +41,7 @@ public class CalendarService implements ICalenderService {
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
 
 
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "./resources/credentials.json";
     public static String ClientId = "";
     public static String ClientSecret = "";
 
@@ -58,7 +58,8 @@ public class CalendarService implements ICalenderService {
         log.info("File객체 이용 현재 프로젝트의 경로 : "+ rootPath);
         rootPath = System.getProperty("user.dir");
         log.info("시스템 변수를 이용해 확인한 경로: " + rootPath);
-
+        rootPath = this.getClass().getResource("").getPath();
+        log.info("그리고?: " + rootPath);
         // Load client secrets.
         InputStream in = CalendarService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {

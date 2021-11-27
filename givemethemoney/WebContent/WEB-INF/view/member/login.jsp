@@ -30,11 +30,6 @@
     <!--*******************
         Preloader end
     ********************-->
-
-    
-
-
-
     <div class="login-form-bg h-100">
         <div class="container h-100">
             <div class="row justify-content-center h-100">
@@ -59,7 +54,8 @@
 									</c:if>
                                     <button class="btn login-form__btn submit w-100">Sign In</button>
                                 </form>
-                                <p class="mt-5 login-form__footer">Dont have account? <a href="${pageContext.request.contextPath}/user/userRegForm.do" class="text-primary">회원가입</a> now</p>
+                                <p class="mt-5 login-form__footer">계정이 없으신가요? <a href="${pageContext.request.contextPath}/user/userRegForm.do" class="text-primary">회원가입</a> now</p>
+                                <p class="mt-5 login-form__footer">비밀번호를 잊어버리셨나요? <a href="${pageContext.request.contextPath}/member/findPassword.do" class="text-primary">비밀번호 찾기</a> now</p>
                             </div>
                         </div>
                     </div>
