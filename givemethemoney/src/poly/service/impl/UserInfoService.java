@@ -27,7 +27,7 @@ public class UserInfoService implements IUserInfoService {
 		log.info("member_email서비스 :"+member_email);
 		
 		
-		
+	//	
 		// controller에서 값이 정상적으로 못 넘어오는 경우를 대비하기 위해 사용함
 		if (pDTO == null) {
 			pDTO = new UserInfoDTO();

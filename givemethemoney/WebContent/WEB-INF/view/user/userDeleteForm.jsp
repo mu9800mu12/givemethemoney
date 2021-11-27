@@ -15,7 +15,7 @@
 						<div class="card login-form mb-0">
 							<div class="card-body pt-5">
 								<a class="text-center">
-									<h4>회원 탈퇴</h4>
+									<h4>회원탈퇴</h4>
 								</a>
 								<form class="mt-5 mb-5 login-input"
 									action="${pageContext.request.contextPath}/user/DeleteUserInfo.do"

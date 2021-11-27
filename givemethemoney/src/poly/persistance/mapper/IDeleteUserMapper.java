@@ -8,4 +8,5 @@ import poly.dto.UserInfoDTO;
 public interface IDeleteUserMapper {
 		//회원 탈퇴
 		int DeleteUserInfo(UserInfoDTO pDTO) throws Exception;
+		//..
 }

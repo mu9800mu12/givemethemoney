@@ -46,10 +46,10 @@ public class DeleteUserController {
 			String MEMBER_PW = CmmUtil.nvl(request.getParameter("member_pw"));
 			log.info("MEMBER_ID : " + MEMBER_ID);
 			log.info("MEMBER__PW : " + MEMBER_PW);
-			
 			pDTO = new UserInfoDTO();
 			pDTO.setMember_id(MEMBER_ID);
 			pDTO.setMember_pw(EncryptUtil.encHashSHA256(MEMBER_PW));
+			log.info("끝");
 			
 		} catch (Exception e) {
 			msg = "실패하였습니다. : " + e.toString();
