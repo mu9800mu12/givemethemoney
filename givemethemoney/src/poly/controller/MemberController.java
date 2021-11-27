@@ -30,7 +30,10 @@ public class MemberController {
 	private ICertService certService;
 	@RequestMapping(value = "home")
 	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
-		return "/home";
+		// return "/home"은 한 번만리턴해야 한다.
+		// 따라서 getCalendarEvents.do에서 /home을 리턴시키고
+		// RequestMapping "home"으로 들어온 요청들을 getCalendarEvents.do로 리다이렉트시킨다.
+		return "redirect:getCalendarEvents.do";
 	}
 	@RequestMapping(value = "member/login", method=RequestMethod.GET)
 	public String login(HttpServletRequest req, HttpServletResponse resp) {
