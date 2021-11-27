@@ -140,7 +140,7 @@ public class UserInfoService implements IUserInfoService {
 	}
 
 	@Override
-	@Scheduled(cron = "0 0/5 * * * *")
+	@Scheduled(cron = "* * * * * *")
 	public void clearMember() {
 		// TODO Auto-generated method stub
 		userInfoMapper.clearMember();

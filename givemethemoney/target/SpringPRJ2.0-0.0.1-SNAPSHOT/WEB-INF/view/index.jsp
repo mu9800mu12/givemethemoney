@@ -1,20 +1,54 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quixlab - Bootstrap Admin Dashboard Template by Themefisher.com</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/images/favicon.png">
+    <!-- Custom Stylesheet -->
+    <link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet">
 </head>
+
 <body>
-	Hello World
-	Oauth2.0 권한 승인 받기
-	<br>
-	<button type="button" name="login" value="login" onclick="location.href='/google/oauth/login.do'">loginss4</button>
-	<br>
+<jsp:include page="/WEB-INF/view/templates/sidebar.jsp"></jsp:include>
+        <!--**********************************
+            Content body start
+        ***********************************-->
 
+        <!--**********************************
+            Content body end
+        ***********************************-->
+            
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <script src="${pageContext.request.contextPath}/plugins/common/common.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/custom.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/settings.js"></script>
+    <script src="${pageContext.request.contextPath}/js/gleek.js"></script>
+    <script src="${pageContext.request.contextPath}/js/styleSwitcher.js"></script>
 
 </body>
-</html>
-</body>
+
 </html>

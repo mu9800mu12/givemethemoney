@@ -87,7 +87,7 @@ public class LeaderController {
 		if(result >0) {
 			msg = "등록을 완료햇습니다.";
 		}else {
-			msg = "등록에실패했습니다.";
+			msg = "등록에 실패했습니다.";
 		}
 		model.addAttribute("msg", msg);
 		return "/leader/msgToMyStaffList";			
@@ -100,7 +100,7 @@ public class LeaderController {
 		int result = leaderService.deleteBlock(mDTO);
 		String msg = "";
 		if(result >0) {
-			msg = "등록을 완료햇습니다.";
+			msg = "블락취소를 완료햇습니다.";
 		}else {
 			msg = "등록에실패했습니다.";
 		}

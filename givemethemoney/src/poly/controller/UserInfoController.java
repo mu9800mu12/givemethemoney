@@ -73,6 +73,18 @@ public class UserInfoController {
 			if (res == 1) {
 				msg = "회원가입되었습니다. 승인까지 최대 3일까지 기다려주세요. ";
 				userInfoService.clearMember();
+				/*
+				보규:
+				<delete id="clearMember">
+					<![CDATA[
+						DELETE FROM member WHERE member_approve='N' and member_auth in('staff','leader')
+						and member_sysdate < TO_CHAR(sysdate - 3, 'yyyy-mm-dd')  <--이 부분에서
+						걸리는 부분이 3일 이상 회원 가입을 안 하면 계속 Data가 남아 있은 문제가..
+						만약 하루하루 날자를 비교해서 3일 지나면 삭제하는 기능을 다른 방법 더 찾아보거나
+						차선으로 index나 home 쪽에서 박아버리는게 좋을 것 같습니다
+					]]>
+				</delete>
+				 */
 			} else if (res == 2) {
 				msg = "이미 가입된 이메일 주소입니다.";
 			} else {

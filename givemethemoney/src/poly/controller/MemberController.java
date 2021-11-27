@@ -28,10 +28,23 @@ public class MemberController {
 	private IEmailService emailService;
 	@Resource(name="CertService")
 	private ICertService certService;
+	
+	
 	@RequestMapping(value = "home")
 	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
-		return "/home";
+		// return "/home"은 한 번만리턴해야 한다.
+		// 따라서 getCalendarEvents.do에서 /home을 리턴시키고
+		// RequestMapping "home"으로 들어온 요청들을 getCalendarEvents.do로 리다이렉트시킨다.
+		return "redirect:getCalendarEvents.do";
 	}
+	
+//	@RequestMapping(value = "home")
+//	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+//		return "/home";
+//	}
+	
+	
+	
 	@RequestMapping(value = "member/login", method=RequestMethod.GET)
 	public String login(HttpServletRequest req, HttpServletResponse resp) {
 		return "/member/login";
@@ -52,12 +65,15 @@ public class MemberController {
 		MemberDTO member_info = memberService.login(mDTO);
 		String msg = "";
 		if(member_info != null) {
-			session.setAttribute("memberinfo", member_info);
-			msg = "로그인 성공했습니다.";
+			if(member_info.getMember_approve().equals("N") || member_info.getMember_auth().equals("block")) {
+				msg = "승인 대기중이거나 블락된 계정입니다.";								
+			}else{
+				session.setAttribute("memberinfo", member_info);
+				msg = "로그인 성공했습니다.";				
+			}
 			model.addAttribute("msg", msg);
 			return "/msgToHome";
 		}else {
-
 			return "redirect:login.do?error=error";
 		}
 	}
@@ -69,7 +85,7 @@ public class MemberController {
 		return "/member/login";
 	}
 	@RequestMapping(value = "member/findPassword", method=RequestMethod.GET)
-	public String findPassword(HttpServletRequest req, HttpServletResponse resp) {
+	public String findPassword(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
 		return "/member/findPassword";
 	}
 	@RequestMapping(value= "member/findPassword", method=RequestMethod.POST)
@@ -80,8 +96,14 @@ public class MemberController {
 		MemberDTO mDTO = new MemberDTO();
 		mDTO.setMember_email(member_email);
 		MemberDTO find_email = memberService.find_email(mDTO);
+		log.info("member_email : "+find_email );
 		String msg = "";
-		if(find_email != null ) {
+		if(find_email== null) {
+			certService.clear();
+			msg = "유효하지 않은 이메일입니다.";
+			model.addAttribute("msg", msg);
+			return "/member/msgToFindePassword";
+		}else {
 			log.info("이메일 찾기 컨트롤러 성공");
 			String ip = req.getRemoteAddr();
 			log.info("이이피(컨트롤러) : "+ip);
@@ -95,11 +117,6 @@ public class MemberController {
 			model.addAttribute("msg", msg);
 			model.addAttribute("member_no", member_no);
 			return "/member/certificate";
-		}else {
-			certService.clear();
-			msg = "유효하지 않은 이메일입니다.";
-			model.addAttribute("msg", msg);
-			return "/member/msgToFindePassword";
 		}
 	}
 	@RequestMapping(value = "member/certificate", method=RequestMethod.GET)
