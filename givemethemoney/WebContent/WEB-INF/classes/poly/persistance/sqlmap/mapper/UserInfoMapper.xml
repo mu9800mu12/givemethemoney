@@ -58,6 +58,15 @@ AND PASSWORD =#{member_pw}
 	]]>
 </delete>
 
+<!-- 유저 삭제 -->
+<delete id="DeleteUserInfo" parameterType="UserInfoDTO">
+	 DELETE from MEMBER
+		WHERE (
+		MEMBER_ID,
+		MEMBER_PW
+		)
+</delete>
+
 			
 			
 </mapper>
