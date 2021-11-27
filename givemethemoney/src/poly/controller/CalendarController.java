@@ -17,6 +17,7 @@ public class CalendarController {
 	public String main(HttpServletRequest req, HttpServletResponse resp) {
 		return "calendar/main";
 	}
+
 	@RequestMapping(value = "calendar/count")
 	public String count(HttpServletRequest req, HttpServletResponse resp) {
 		return "calendar/count";
