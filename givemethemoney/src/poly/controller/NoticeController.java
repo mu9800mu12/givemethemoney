@@ -40,10 +40,10 @@ public class NoticeController {
 	 * */
 	
 	@RequestMapping(value="index")
-	public String Index() {
+	public String Index(HttpServletRequest req, HttpServletResponse resp) {
 		log.info(this.getClass());
 		
-		return "/index";
+		return "/member/login";
 	}
 	
 	/**
@@ -61,7 +61,6 @@ public class NoticeController {
 		
 		if (rList==null){
 			rList = new ArrayList<NoticeDTO>();
-			
 		}
 		
 		//조회된 리스트 결과값 넣어주기

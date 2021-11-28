@@ -1,2 +1,6 @@
 eclipse.preferences.version=1
 encoding//WebContent/WEB-INF/view/CHW/CHWUpdateInfo.jsp=UTF-8
+eclipse.preferences.version=1
+encoding//WebContent/WEB-INF/view/index.jsp=UTF-8
+encoding//WebContent/WEB-INF/view/member/login.jsp=UTF-8
+encoding//WebContent/WEB-INF/view/templates/sidebar.jsp=UTF-8
