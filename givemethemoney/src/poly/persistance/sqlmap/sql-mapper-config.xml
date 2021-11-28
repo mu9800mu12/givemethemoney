@@ -11,5 +11,7 @@
 		<typeAlias type="poly.dto.CertDTO" alias="CertDTO"/>
 		<typeAlias type="poly.dto.EmailDTO" alias="EmailDTO"/>
 		<typeAlias type="poly.dto.EventDTO" alias="EventDTO"/>
+		<typeAlias type="poly.dto.CHWDTO" alias="CHWDTO"/>
+		
     </typeAliases>
 </configuration>
