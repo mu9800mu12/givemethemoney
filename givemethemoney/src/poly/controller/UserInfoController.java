@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import poly.dto.CHWDTO;
+import poly.dto.MemberDTO;
 import poly.dto.UserInfoDTO;
-import poly.service.ICHWService;
 import poly.service.IUserInfoService;
+import poly.service.impl.CHWService;
 import poly.util.CmmUtil;
 import poly.util.EncryptUtil;
 
@@ -167,82 +168,27 @@ public class UserInfoController {
 
 		return "user/LoginResult";
 	}
-	@Resource(name = "CHWService")
-	private ICHWService CHWService;
 	
-	@RequestMapping(value="abcd")
-	public String abcd() throws Exception{
+	@RequestMapping(value="user/userInfo", method=RequestMethod.GET)
+	public String userInfo(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) throws Exception{
+		
 		log.info(this.getClass().getName()+" CHWUpdateInfo 페이지 띄움");
-		return "/CHW/CHWUpdateInfo";
+		MemberDTO memberinfo = (MemberDTO) session.getAttribute("memberinfo");
+		model.addAttribute("memberinfo", memberinfo);
+		return "/user/userInfo";
 	}
 
-	/*
-	 * 게시판 수정 화면 보기
-	 */
-	@RequestMapping(value = "CHW/CHWUpdateInfo", method = RequestMethod.GET)						//HttpSession session
-	public String CHWUpdate(HttpServletRequest request, HttpServletResponse response, ModelMap model, HttpSession session) throws Exception {
-		
-		log.info(this.getClass().getName() + "UpdateInfo start");
-		
-		//HttpSession httpSession = request.getSession(true);
-		//CHWDTO member_NO = (CHWDTO) httpSession.getAttribute("null");
-		
-		//int member_no = 1;
-		//int member_no = (int)session.getAttribute("member_no");
-		String member_no = CmmUtil.nvl((String)(request.getParameter("member_no"))); //pk
-		//String member_no = (String)request.getAttribute("member_no");
-		// 이 함수가 실행됐는지 로그 찍기
-		log.info(123);
-		/*
-		 * 게시판 글 등록되기 위해 사용되는 form객체의 하위 input 객체 등을 받아오기 위해 사용함
-		 */
-		//int member_no = CmmUtil.nvl(request.getParameter("member_no")); // 공지글번호(PK)
-		//int member_no = ((int) session.getAttribute("member_no"));
-		
-		
-		
-		log.info("member_no : " + member_no);
-
-		/*
-		 * 값 전달은 반드시 DTO 객체를 이용해서 처리함 전달 받은 값을 DTO 객체에 넣는다.
-		 */
-		
-		CHWDTO rDTO = new CHWDTO();
-
-		
-		
-		rDTO.setMember_no(Integer.parseInt(member_no));
-		
-
-		
-		log.info("UpdateInfo member_no success!!!");
-		
-		// 회원정보 상세정보 가져오기
-		//서비스를 통해 매퍼에서 sql문 가져오기
-		CHWDTO pDTO = CHWService.CHWUpdateInfo(rDTO);
-
-		
-		log.info(1);
-		
-		if (pDTO == null) {
-			pDTO = new CHWDTO();
-			log.info(2);
-		}
-		log.info(3);
-		log.info("CHWUpdateInfo2 success!!!");
-
-		// 조회된 리스트 결과값 넣어주기
-		model.addAttribute("pDTO", pDTO);
-
-		// 변수 초기화(메모리 효율화 시키기 위해 사용함)
-		rDTO = null;
-		pDTO = null;
-		
-		
-				
-		log.info(this.getClass().getName() + "Update end");
-	
-		return "/CHW/CHWUpdate";
+	@RequestMapping(value="user/userUpdate", method=RequestMethod.GET)
+	public String userUpdate(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) {
+		MemberDTO memberinfo = (MemberDTO)session.getAttribute("memberinfo");
+		model.addAttribute("memberinfo", memberinfo);
+		return "/user/userUpdate";
+	}
+	@RequestMapping(value="user/userUpdate", method=RequestMethod.POST)
+	public String userUpdate(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+		int member_no = Integer.parseInt(req.getParameter("member_no"));
+		String member_name = req.getParameter("member_name");
+		return "/user/userInfo";
 	}
 	/**
 	 * 멤버 회원정보 수정 문
