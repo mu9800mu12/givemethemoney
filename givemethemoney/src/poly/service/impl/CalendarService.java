@@ -32,7 +32,7 @@ public class CalendarService implements ICalenderService {
     private final Logger log = Logger.getLogger(getClass().getName());
     private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "./resources/tokens";
+    private static  String TOKENS_DIRECTORY_PATH = "";
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -41,7 +41,7 @@ public class CalendarService implements ICalenderService {
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
 
 
-    private static final String CREDENTIALS_FILE_PATH = "./resources/credentials.json";
+    private static String CREDENTIALS_FILE_PATH = "./resources/credentials.json";
     public static String ClientId = "";
     public static String ClientSecret = "";
 
@@ -61,6 +61,7 @@ public class CalendarService implements ICalenderService {
         rootPath = this.getClass().getResource("").getPath();
         log.info("그리고?: " + rootPath);
         // Load client secrets.
+        TOKENS_DIRECTORY_PATH = "C:/chanwoo/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/SpringPRJ2.0/WEB-INF/classes/poly/service/impl/" + "resources/tokens";
         InputStream in = CalendarService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
