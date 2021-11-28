@@ -34,6 +34,9 @@ public class NoticeService implements INoticeService{
 		
 	}
 	
+	
+	
+	
 	@Override
 	public void updateNoticeReadCnt(NoticeDTO pDTO) throws Exception {
 		noticeMapper.updateNoticeReadCnt(pDTO);;
@@ -45,6 +48,14 @@ public class NoticeService implements INoticeService{
 		noticeMapper.updateNoticeInfo(pDTO);
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Override
 	public void deleteNoticeInfo(NoticeDTO pDTO) throws Exception {

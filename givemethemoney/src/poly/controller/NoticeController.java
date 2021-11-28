@@ -31,6 +31,7 @@ public class NoticeController {
 	 * */
 	@Resource(name = "NoticeService")
 	private INoticeService noticeService;
+	// Controller에서 Service 호출을 위한 객체를 '인터페이스'로 메모리에 생성한다.
 	
 	/*
 	 * 함수명 위의 value="notice/NoticeList" => /notice/NoticeList.do로 호출되는 url은 무조건 이 함수가 실행된다.
