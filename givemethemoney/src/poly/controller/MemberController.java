@@ -99,7 +99,6 @@ public class MemberController {
 		log.info("member_email : "+find_email );
 		String msg = "";
 		if(find_email== null) {
-			certService.clear();
 			msg = "유효하지 않은 이메일입니다.";
 			model.addAttribute("msg", msg);
 			return "/member/msgToFindePassword";
@@ -113,7 +112,6 @@ public class MemberController {
 			int member_no = find_email.getMember_no();
 			session.setAttribute("member_no", member_no);
 			msg = "이메일로 인증번호를 발송했습니다. 5분 안에 인증 부탁드립니다.";
-			certService.clear();
 			model.addAttribute("msg", msg);
 			model.addAttribute("member_no", member_no);
 			return "/member/certificate";

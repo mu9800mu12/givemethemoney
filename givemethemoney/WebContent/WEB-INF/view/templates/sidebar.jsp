@@ -128,7 +128,7 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">캘린더관리</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="./index.html">새로운 캘린더</a></li>
+                            <li><a href="${pageContext.request.contextPath}/getCalendarEvents.do">캘린더</a></li>
                             <li><a href="./index-2.html">세로운 파트일정</a></li>
                             <li><a href="./index-2.html">일정 수정</a></li>
                             <li><a href="./index-2.html">일정 예약/수정</a></li>
