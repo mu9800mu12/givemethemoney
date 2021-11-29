@@ -20,4 +20,21 @@
 		member_pw = #{member_pw}
 		where member_no = ${member_no}
 	</update>
+
+	<update id="upcCred" parameterType="MemberDTO">
+		UPDATE MEMBER
+		SET STORED_CRED = #{stored_cred}
+		WHERE MEMBER_APPROVE='Y' AND MEMBER_EMAIL = #{member_email}
+	</update>
+	<update id="removeCredDB" parameterType="MemberDTO">
+		UPDATE MEMBER
+		SET STORED_CRED = null
+		WHERE MEMBER_EMAIL = #{member_email}
+	</update>
+
+	<select id="storeCredFromDB" parameterType="MemberDTO" resultType="MemberDTO">
+		SELECT STORED_CRED
+		FROM MEMBER
+		WHERE MEMBER_EMAIL = #{member_email}
+	</select>
 </mapper>

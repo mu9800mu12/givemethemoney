@@ -10,4 +10,9 @@ public interface IMemberMapper {
 	MemberDTO find_email(MemberDTO mDTO);
 
 	int changePassword(MemberDTO mDTO);
+
+
+	int upcCred(MemberDTO mDTO);
+	int removeCredDB(MemberDTO mDTO);
+	MemberDTO storeCredFromDB(MemberDTO mDTO);
 }

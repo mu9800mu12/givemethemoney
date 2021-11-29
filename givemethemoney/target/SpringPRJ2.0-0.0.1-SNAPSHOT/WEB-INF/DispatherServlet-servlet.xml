@@ -76,23 +76,21 @@
 	<mvc:interceptors>
 		<!-- 회원 인터셉터 -->
 		<mvc:interceptor>
-			<mvc:mapping path="/member/certification" />
-			<mvc:mapping path="/member/changePassword" />
-			<mvc:mapping path="/member/findPassword" />
-			<mvc:mapping path="/member/msgToFindPassword" />
 			<mvc:mapping path="/master/**"/>
 			<mvc:mapping path="/leader/**"/>
-			<mvc:mapping path="/home"/>
+			<mvc:mapping path="/home.do"/>
+			<mvc:mapping path="/index.do"/>
+			<mvc:mapping path="/user/userInfo.do"/>
+			<mvc:mapping path="/user/userUpdate.do"/>			
 			<bean class="poly.interceptor.MemberInterceptor"></bean>
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/member/certification" />
-			<mvc:mapping path="/member/changePassword" />
-			<mvc:mapping path="/member/findPassword" />
-			<mvc:mapping path="/member/msgToFindPassword" />
 			<mvc:mapping path="/master/**"/>
 			<mvc:mapping path="/leader/**"/>
-			<mvc:mapping path="/home"/>
+			<mvc:mapping path="/home.do"/>
+			<mvc:mapping path="/index.do"/>
+			<mvc:mapping path="/user/userInfo.do"/>
+			<mvc:mapping path="/user/userUpdate.do"/>
 			<bean class="poly.interceptor.BlockInterceptor"></bean>
 		</mvc:interceptor>
 		<mvc:interceptor>

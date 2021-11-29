@@ -1,9 +1,17 @@
 package poly.dto;
 
 public class MemberDTO {
+	private byte[] stored_cred;
 	private int member_no;
 	private String member_id, member_name, member_pw, member_email, member_addr1, member_addr2,
-	member_auth, team_name, member_phone, member_team, member_approve;
+			member_auth, team_name, member_phone, member_team, member_approve;
+
+	public byte[] getStored_cred() {
+		return stored_cred;
+	}
+	public void setStored_cred(byte[] stored_cred) {
+		this.stored_cred = stored_cred;
+	}
 	public String getTeam_name() {
 		return team_name;
 	}
@@ -83,5 +91,5 @@ public class MemberDTO {
 	public void setMember_auth(String member_auth) {
 		this.member_auth = member_auth;
 	}
-	
+
 }

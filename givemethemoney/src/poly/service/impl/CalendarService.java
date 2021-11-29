@@ -1,11 +1,14 @@
 package poly.service.impl;
 
+
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleRefreshTokenRequest;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -19,20 +22,28 @@ import com.google.api.services.calendar.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import poly.dto.EventDTO;
+import poly.dto.MemberDTO;
+import poly.persistance.mapper.IMemberMapper;
 import poly.service.ICalenderService;
 import poly.util.CmmUtil;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
+import static java.lang.String.format;
+
 @Service("CalendarService")
 public class CalendarService implements ICalenderService {
 
+    @Resource(name = "MemberMapper")
+    private IMemberMapper iMemberMapper;
+
     private final Logger log = Logger.getLogger(getClass().getName());
     private static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
-    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static  String TOKENS_DIRECTORY_PATH = "";
+    private static  JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static String TOKENS_DIRECTORY_PATH = "";
 
     /**
      * Global instance of the scopes required by this quickstart.
@@ -41,9 +52,109 @@ public class CalendarService implements ICalenderService {
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
 
 
-    private static String CREDENTIALS_FILE_PATH = "./resources/credentials.json";
+    ///C:/SpringEx/CHW/givemethemoney/target/SpringPRJ2.0-0.0.1-SNAPSHOT/WEB-INF/classes/poly/service/impl/
+    private static final String CREDENTIALS_FILE_PATH = "./resources/credentials.json";
     public static String ClientId = "";
     public static String ClientSecret = "";
+
+
+
+    public void dirMethod(){
+        String rootPath = this.getClass().getResource("").getPath();
+        log.info("\"resources/credentials.json\"을 \n"+rootPath+" <-하위에 위치시켜주세요.");
+        TOKENS_DIRECTORY_PATH=rootPath+"resources/tokens";
+        MemberDTO pDTO = new MemberDTO();
+    }
+    public int readCredData(MemberDTO pDTO) throws IOException {
+        log.info(" 시작");
+        dirMethod();
+
+        int res = 0;
+        FileInputStream fis= null;
+        ByteArrayOutputStream baos =null;
+
+
+        try{
+            baos = new ByteArrayOutputStream();
+            /*
+            StoredCredential을 읽어 들이는 위치
+             */
+            log.info("인증 파일을 읽어들이는 위치: "+ TOKENS_DIRECTORY_PATH+"/StoredCredential");
+            fis = new FileInputStream(TOKENS_DIRECTORY_PATH+"/StoredCredential");
+            byte[] buf = new byte[4096];
+            int read = 0;
+
+            while((read= fis.read(buf, 0, buf.length)) != -1){
+                baos.write(buf, 0, read);
+            }
+
+            /*
+            오라클 BLOB형으로 저장하기 위해
+             */
+            byte[] returnValue= baos.toByteArray();
+
+            /*리더의 인증파일*/
+            pDTO.setStored_cred(returnValue);
+            /*리더의 이메일*/
+            log.info("인증 파일을 저장할 email: " + pDTO.getMember_email());
+            res = iMemberMapper.upcCred(pDTO);
+            log.info("로컬에 저장된 인증파일 DB에 update 완료");
+
+
+            /*
+            //업데이트문으로 DB에 넣어주고
+
+            DB에 올린다
+            그리고 로컬 파일을 삭제한다.
+
+            로그인 하면 DB에 있는 파일을 로컬로 다운로드 하고
+            로그아웃 시 삭제
+
+            토큰이 만료 되거나 갱신되면 전체 DB 같은 Team에 파일도 업데이트
+             */
+
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            log.info(e.getMessage());
+        }finally {
+            pDTO = null;
+
+            log.info(" 종료");
+            return res;
+        }
+    }
+    public int removeCredDB(MemberDTO pDTO) throws IOException{
+        int res = 0;
+        log.info("인증 파일을 삭제할 이메일: " + pDTO.getMember_email());
+        res = iMemberMapper.removeCredDB(pDTO);
+        return res;
+    }
+    /*DB에서 읽어와서 로컬에 저장 "/StoredCredentialDB" */
+    public void writeCredData(MemberDTO pDTO) throws IOException {
+        log.info(" 시작");
+        FileOutputStream fos = null;
+        MemberDTO rDTO = null;
+        try{
+            /*db에서 blob에 담긴 바이트데이터를 rDTO에 담아서
+             * byte[] array에 담고
+             * bais에 입력시켜
+             * */
+            log.info("조회할 email: " + pDTO.getMember_email());
+            rDTO = iMemberMapper.storeCredFromDB(pDTO);
+            byte[] fileByte = rDTO.getStored_cred();
+            log.info("파일 경로를 임시로 아래와 같이 함 \n" + TOKENS_DIRECTORY_PATH+"/StoredCredentialDB");
+            fos = new FileOutputStream(TOKENS_DIRECTORY_PATH+"/StoredCredentialDB");
+            fos.write(fileByte);
+        }catch (IOException e){
+            e.printStackTrace();
+            log.info(e.getMessage());
+        }finally {
+            pDTO = null;
+            rDTO = null;
+            fos.close();
+            log.info(" 종료");
+        }
+    }
 
     /**
      * Creates an authorized Credential object.
@@ -51,27 +162,41 @@ public class CalendarService implements ICalenderService {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
+
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         log.info("start");
-        File file = new File(".");
-        String rootPath = file.getAbsolutePath();
-        log.info("File객체 이용 현재 프로젝트의 경로 : "+ rootPath);
-        rootPath = System.getProperty("user.dir");
-        log.info("시스템 변수를 이용해 확인한 경로: " + rootPath);
-        rootPath = this.getClass().getResource("").getPath();
-        log.info("그리고?: " + rootPath);
-        // Load client secrets.
-        TOKENS_DIRECTORY_PATH = "C:/chanwoo/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/SpringPRJ2.0/WEB-INF/classes/poly/service/impl/" + "resources/tokens";
+        dirMethod();
+        MemberDTO pDTO = new MemberDTO();
+        pDTO.setMember_email("kjj6393@gmail.com");
+        readCredData(pDTO);
+        writeCredData(pDTO);
+//        log.info("크래딧 인서트 실행");
+//        readCredData();
+//        log.info("크래딧 인서트 종료");
+
+
+        log.info("크래딧 삭제 실행");
+        /*잠깐 주석 처리*/
+//        log.info("삭제 실행 결과: "+removeCredDB(pDTO));
+        log.info("크래딧 삭제 완료");
+
+
+
         InputStream in = CalendarService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+
+
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
+
         //클라이언트 정보를 저장
         ClientId = clientSecrets.getDetails().getClientId();
         ClientSecret = clientSecrets.getDetails().getClientSecret();
 
+
+        log.info("최종 토큰 경로 :" + TOKENS_DIRECTORY_PATH);
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
@@ -79,13 +204,19 @@ public class CalendarService implements ICalenderService {
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+
         log.info("end");
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
     public void insertEvent(EventDTO pDTO) throws IOException, GeneralSecurityException {
+
+
+
         NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("applicationName").build();
+
+
 
         log.info("이벤트 insert 시작");
         Event event = new Event()
@@ -168,6 +299,24 @@ public class CalendarService implements ICalenderService {
     public void getCalendarList() throws IOException, GeneralSecurityException{
         log.info(this.getClass().getName() + "getCalendarList start!");
         /* */
+//        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+//        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+//                .setApplicationName("applicationName").build();
+
+
+
+
+        GoogleCredential credential = new GoogleCredential.Builder()
+                .setTransport(new NetHttpTransport())
+                .setJsonFactory(JSON_FACTORY)
+                .setClientSecrets("client_id", "client_secret")
+                .setServiceAccountScopes(SCOPES)
+                .build();
+
+        credential.setAccessToken("access_token");
+
+
+
         NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("applicationName").build();
@@ -310,7 +459,7 @@ public class CalendarService implements ICalenderService {
 
         DateTime now = new DateTime(System.currentTimeMillis());
         Events events = service.events().list("primary")
-                .setMaxResults(90)
+                .setMaxResults(10)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
