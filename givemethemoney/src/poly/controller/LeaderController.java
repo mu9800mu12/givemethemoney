@@ -46,10 +46,13 @@ public class LeaderController {
 		mDTO.setMember_no(member_no);
 		MemberDTO member_info = (MemberDTO)session.getAttribute("memberinfo");
 		mDTO.setMember_team(member_info.getMember_team());
+		mDTO.setStored_cred(member_info.getStored_cred());
 		int res = leaderService.addStaff(mDTO);
 		String msg = "";
 		if(res > 0) {
 			msg = "성공했습니다.";
+
+
 		}else{
 			msg = "실패했습니다.";
 		}

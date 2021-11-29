@@ -3,7 +3,6 @@ package poly.service.impl;
 
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -178,7 +177,7 @@ public class CalendarService implements ICalenderService {
      * @throws IOException If the credentials.json file cannot be found.
      */
 
-    private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+    public Credential getCredentials(NetHttpTransport HTTP_TRANSPORT) throws IOException {
         log.info("start");
         dirMethod();
 
@@ -225,6 +224,24 @@ public class CalendarService implements ICalenderService {
         log.info("end");
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
+
+    public void interfaceGetCredentials(MemberDTO pDTO) throws IOException, GeneralSecurityException {
+        log.info("나는 interfaceGetCredentials");
+        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName("applicationName").build();
+
+        readCredData(pDTO);
+
+
+    }
+
+    @Override
+    public MemberDTO memberinfo(MemberDTO mDTO) {
+        return iMemberMapper.memberinfo(mDTO);
+    }
+
+
     public void insertEvent(EventDTO pDTO) throws IOException, GeneralSecurityException {
 
 

@@ -15,4 +15,6 @@ public interface IMemberMapper {
 	int upcCred(MemberDTO mDTO);
 	int removeCredDB(MemberDTO mDTO);
 	MemberDTO storeCredFromDB(MemberDTO mDTO);
+
+    MemberDTO memberinfo(MemberDTO mDTO);
 }

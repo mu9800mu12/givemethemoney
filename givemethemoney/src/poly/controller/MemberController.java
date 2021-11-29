@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import poly.dto.CertDTO;
 import poly.dto.MemberDTO;
+import poly.service.ICalenderService;
 import poly.service.ICertService;
 import poly.service.IEmailService;
 import poly.service.IMemberService;
@@ -28,7 +29,9 @@ public class MemberController {
 	private IEmailService emailService;
 	@Resource(name="CertService")
 	private ICertService certService;
-	
+	@Resource(name="CalendarService")
+	private ICalenderService iCalenderService;
+
 	
 	@RequestMapping(value = "home")
 	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
@@ -62,14 +65,41 @@ public class MemberController {
 		MemberDTO mDTO = new MemberDTO();
 		mDTO.setMember_pw(EncryptUtil.encHashSHA256(member_pw));
 		mDTO.setMember_id(member_id);
-		MemberDTO member_info = memberService.login(mDTO);
+		MemberDTO login = memberService.login(mDTO);
+
+
+//		Byte[] stored_cred = iCalenderService.getStored_cred(member_info.getMember_no());
+		/*
+
+		맨 처음 로그인 승인 받은 후
+		로그인을 할 수 있어야지
+
+
+		byte가 null
+		DB에서 stored_cred가 있는지 없는지
+		비교
+		이면 구글 인증을 받아 와야한다
+
+		byte가 null이 아니면 바로 구글 캘린더로 직행
+
+
+		 */
 		String msg = "";
-		if(member_info != null) {
-			if(member_info.getMember_approve().equals("N") || member_info.getMember_auth().equals("block")) {
-				msg = "승인 대기중이거나 블락된 계정입니다.";								
-			}else{
+		if(login != null) {
+			if(login.getMember_approve().equals("N") || login.getMember_auth().equals("block")) {
+				msg = "승인 대기중이거나 블락된 계정입니다.";
+			}else if(login.getMember_auth()!="member"){//권한이 리더랑 마스터
+				MemberDTO mDtO = new MemberDTO();
+				mDTO.setMember_no(login.getMember_no());
+				MemberDTO member_info = iCalenderService.memberinfo(mDTO);
+				iCalenderService.interfaceGetCredentials(member_info);
 				session.setAttribute("memberinfo", member_info);
-				msg = "로그인 성공했습니다.";				
+				msg = "로그인 성공했습니다.";
+				/*
+				여기
+				 */
+			}else{//권한이 스태프
+
 			}
 			model.addAttribute("msg", msg);
 			return "/msgToHome";

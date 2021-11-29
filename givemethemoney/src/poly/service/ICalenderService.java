@@ -2,6 +2,7 @@ package poly.service;
 
 
 import poly.dto.EventDTO;
+import poly.dto.MemberDTO;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -15,4 +16,7 @@ public interface ICalenderService {
 	void insertEvent(EventDTO pDTO) throws IOException, GeneralSecurityException;
 	void deleteEvent(String event_id) throws IOException, GeneralSecurityException;
 	void updateEvent(EventDTO pDTO) throws IOException, GeneralSecurityException;
+	void interfaceGetCredentials(MemberDTO mDTO) throws IOException, GeneralSecurityException;
+
+	MemberDTO memberinfo(MemberDTO mDTO);
 }

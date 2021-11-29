@@ -4,7 +4,10 @@
 <mapper namespace="poly.persistance.mapper.IMemberMapper">
 	<select id = "login" parameterType="MemberDTO" resultType="MemberDTO">
 		select 
-		*
+			member_no,
+		    member_auth,
+		    member_apporove,
+		    member_sysdate
 		from member m
 		where member_id=#{member_id} and member_pw=#{member_pw}
 	</select>
@@ -38,4 +41,11 @@
 		FROM MEMBER
 		WHERE MEMBER_EMAIL = #{member_email}
 	</select>
+
+	<select id="memberinfo" parameterType="MemberDTO" resultType="MemberDTO">
+		SELECT *
+		FROM MEMBER
+		WHERE MEMBER_NO = #{member_no}
+	</select>
+
 </mapper>
