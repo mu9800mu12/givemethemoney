@@ -23,7 +23,7 @@
 
 <script language="JavaScript" charset="UTF-8">
         var access = "관리자";
-//         access = "노예";
+        access = "직원";
         var events_arr = new Array();
 
         window.onload = function(){
@@ -182,7 +182,7 @@
                             }
                         }
                         else{
-                            alert("인원이 다 찼는데...");
+                            alert("인원이 다 찼습니다");
                         }
 
 
