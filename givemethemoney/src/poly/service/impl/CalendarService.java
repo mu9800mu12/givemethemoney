@@ -3,6 +3,7 @@ package poly.service.impl;
 
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -58,6 +59,20 @@ public class CalendarService implements ICalenderService {
     public static String ClientSecret = "";
 
 
+    public void deleteCred(){
+        dirMethod();
+        File deleteCred = new File(TOKENS_DIRECTORY_PATH+"/StoredCredential");
+        /*만약 해당 경로에 파일이 존재한다면*/
+        if(deleteCred.exists()){
+            deleteCred.setReadable(true);
+            deleteCred.setWritable(true);
+            /*삭제 실행*/
+            deleteCred.delete();
+            log.info("로그아웃 했습니다. 인증파일을 삭제했습니다.");
+        }else{
+            log.info("파일을 찾을 수 없습니다.");
+        }
+    }
 
     public void dirMethod(){
         String rootPath = this.getClass().getResource("").getPath();
@@ -91,7 +106,7 @@ public class CalendarService implements ICalenderService {
             /*
             오라클 BLOB형으로 저장하기 위해
              */
-            byte[] returnValue= baos.toByteArray();
+            byte[] returnValue = baos.toByteArray();
 
             /*리더의 인증파일*/
             pDTO.setStored_cred(returnValue);
@@ -142,8 +157,8 @@ public class CalendarService implements ICalenderService {
             log.info("조회할 email: " + pDTO.getMember_email());
             rDTO = iMemberMapper.storeCredFromDB(pDTO);
             byte[] fileByte = rDTO.getStored_cred();
-            log.info("파일 경로를 임시로 아래와 같이 함 \n" + TOKENS_DIRECTORY_PATH+"/StoredCredentialDB");
-            fos = new FileOutputStream(TOKENS_DIRECTORY_PATH+"/StoredCredentialDB");
+            log.info("인증 파일 저장 경로 \n" + TOKENS_DIRECTORY_PATH+"/StoredCredential");
+            fos = new FileOutputStream(TOKENS_DIRECTORY_PATH+"/StoredCredential");
             fos.write(fileByte);
         }catch (IOException e){
             e.printStackTrace();
@@ -166,6 +181,8 @@ public class CalendarService implements ICalenderService {
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         log.info("start");
         dirMethod();
+
+
         MemberDTO pDTO = new MemberDTO();
         pDTO.setMember_email("kjj6393@gmail.com");
         readCredData(pDTO);

@@ -14,7 +14,7 @@
 	where member_team=#{member_team} and member_auth='staff'
 </select>
 
-
+<!--여기 수정해야해 보규-->
 <update id="addStaff" parameterType="MemberDTO">
 	update member set
 	member_team = #{member_team},

@@ -26,6 +26,7 @@
 		SET STORED_CRED = #{stored_cred}
 		WHERE MEMBER_APPROVE='Y' AND MEMBER_EMAIL = #{member_email}
 	</update>
+
 	<update id="removeCredDB" parameterType="MemberDTO">
 		UPDATE MEMBER
 		SET STORED_CRED = null
