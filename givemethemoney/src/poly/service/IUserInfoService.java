@@ -17,6 +17,18 @@ public interface IUserInfoService {
 
 	void clearMember();
 
+	int userUpdate(MemberDTO mDTO);
+
+	MemberDTO userInfo(int member_no);
+
+	void userDelete(int member_no);
+
+	int checkPassword(MemberDTO mDTO);
+
+
+
+
+
 
 
 }

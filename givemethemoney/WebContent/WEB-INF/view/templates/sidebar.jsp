@@ -30,7 +30,7 @@
         ***********************************-->
         <div class="nav-header">
             <div class="brand-logo">
-                <a href="index.html">
+                <a href="${pageContext.request.contextPath}/home.do">
                     <b class="logo-abbr"><img src="${pageContext.request.contextPath}/images/logo.png" alt=""></b>
                     <span class="logo-compact"><img src="${pageContext.request.contextPath}/images/logo-compact.png" alt=""></span>
                     <span class="brand-title">
@@ -97,7 +97,7 @@
                                 <div class="dropdown-content-body">
                                     <ul>
                                         <li>
-                                            <a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
+                                            <a href="${pageContext.request.contextPath}/user/userInfo.do"><i class="icon-user"></i> <span>Profile</span></a>
                                         </li>
 
                                         
@@ -128,11 +128,7 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">캘린더관리</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="${pageContext.request.contextPath}/getCalendarEvents.do">캘린더</a></li>
-                            <li><a href="./index-2.html">세로운 파트일정</a></li>
-                            <li><a href="./index-2.html">일정 수정</a></li>
-                            <li><a href="./index-2.html">일정 예약/수정</a></li>
-                            
+                            <li><a href="${pageContext.request.contextPath}/getCalendarEvents.do">캘린더</a></li>                            
                         </ul>
                     </li>
                     <c:choose>
@@ -157,57 +153,16 @@
                    </li>
                     	</c:when>
                     </c:choose>
-                    <li class="nav-label">Apps</li>
-                    <li>                      
-                        <ul aria-expanded="false">
-                        </ul>
-                    </li>
-                    <li>
-                        <ul aria-expanded="false">
-                        </ul>
-                    </li>
-                    <li>                      
-                        <ul aria-expanded="false">
-                        </ul>
-                    </li>
-                    <li class="nav-label">UI Components</li>
-                    <li>
-                        
-                        <ul aria-expanded="false">
-                            
-                        </ul>
-                    </li>
-                    <li>
-                        
-                    </li>
-                    <li class="nav-label">Forms</li>
-                    <li>
-                        
-                        <ul aria-expanded="false">
-                            
-                        </ul>
-                    </li>
-                    
-                    <li>
-                       
-                        <ul aria-expanded="false">
-                            
-                        </ul>
-                    </li>
+
                     <li class="nav-label">Pages</li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Pages</span>
+                            <i class="icon-notebook menu-icon"></i><span class="nav-text">회원정보</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="${pageContext.request.contextPath}/member/login.do">Login</a></li>
-                            <li><a href="${pageContext.request.contextPath}/">Register</a></li>
-                            <li><a href="${pageContext.request.contextPath}/member/findPassword.do">비밀번호 찾기</a></li>
-                            <li>
-                                <ul aria-expanded="false">
-                                    
-                                </ul>
-                            </li>
+                            <li><a href="${pageContext.request.contextPath}/user/userInfo.do">회원정보</a></li>
+                            <li><a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a></li>
+                            
                         </ul>
                     </li>
                 </ul>

@@ -21,7 +21,7 @@
 	</delete>
 	<delete id="clearAll">
 		<![CDATA[
-			delete cert where when < sysdate - 5/24/60
+			delete cert where when < sysdate - 10/24/60
 		]]>
 	</delete>
 

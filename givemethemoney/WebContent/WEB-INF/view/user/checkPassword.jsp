@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <%@page import="poly.util.CmmUtil"%>
 <html lang="en">
@@ -42,25 +41,27 @@
 			<div class="col-lg-12">
 				<div class="card">
 					<div class="card-body">
-						<h4 class="card-title">비밀번호 찾기</h4>
-						<p class="text-muted m-b-15 f-s-12">자신의 이메일을 입력하고 인증번호 발송 버튼을
-							누르세요</p>
+						<h4 class="card-title">비밀번호 확인</h4>
+						<p class="text-muted m-b-15 f-s-12">회원정보 수정 및 탈퇴 전 비밀번호를 입력, 확인버튼을 누르세요</p>
 						<div class="basic-form">
 							<form
-								action="${pageContext.request.contextPath}/member/findPassword.do"
+								action="${pageContext.request.contextPath}/user/checkPassword.do"
 								method="post">
 								<div class="form-group">
-									<input type="text" name="member_email"
-										class="form-control input-default" placeholder="가입한 이메일을 적으세요">
+									<input type="hidden" name="member_no" value ="${memberinfo.member_no}"
+										class="form-control input-default" >
+								</div>
+								<div class="form-group">
+									<input type="password" name="member_pw"
+										class="form-control input-default" placeholder="비밀번호를 적으세요">
 								</div>
 								<c:if test="${not empty param.error}">
-									<div class="form-label-group">
-										<font color="FF0000">입력하신 로그인 정보가 맞지 않습니다.</font>
-									</div>
+										<div class="form-group">
+											<font color="FF0000">해당 계정의 비밀번호와 다릅니다.</font>
+										</div>
 								</c:if>
 								<div class="general-button">
-									<button type="submit" class="btn mb-1 btn-primary">인증번호
-										발송</button>
+									<button type="submit" class="btn mb-1 btn-primary">비밀번호 확인</button>
 								</div>
 							</form>
 						</div>

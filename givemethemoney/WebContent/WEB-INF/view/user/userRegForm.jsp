@@ -127,9 +127,67 @@
 	margin: 0.3rem;
 }
 </style>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+    function sample4_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+
+                // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                    extraRoadAddr += data.bname;
+                }
+                // 건물명이 있고, 공동주택일 경우 추가한다.
+                if(data.buildingName !== '' && data.apartment === 'Y'){
+                   extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                if(extraRoadAddr !== ''){
+                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('sample4_postcode').value = data.zonecode;
+                document.getElementById("sample4_roadAddress").value = roadAddr;
+                document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+                
+                // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                if(roadAddr !== ''){
+                    document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+                } else {
+                    document.getElementById("sample4_extraAddress").value = '';
+                }
+
+                var guideTextBox = document.getElementById("guide");
+                // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                if(data.autoRoadAddress) {
+                    var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                    guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                    guideTextBox.style.display = 'block';
+
+                } else if(data.autoJibunAddress) {
+                    var expJibunAddr = data.autoJibunAddress;
+                    guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                    guideTextBox.style.display = 'block';
+                } else {
+                    guideTextBox.innerHTML = '';
+                    guideTextBox.style.display = 'none';
+                }
+            }
+        }).open();
+    }
+</script>
 <script type="text/javascript">
 	function checkName() {
-		var regex = /[가-힣]{2,7}/g;
+		var regex = /^[가-힣]{2,7}$/g;
 		var nameTag = document.getElementById("name");
 
 		var isName = regex.test(nameTag.value);
@@ -268,7 +326,7 @@
 	}
 	function checkAddr1() {
 		var regex = /[가-힣]{1,200}/g;
-		var nameTag = document.getElementById("addr1");
+		var nameTag = document.getElementById("sample4_roadAddress");
 
 		var isName = regex.test(nameTag.value);
 		nameTag.classList.remove("correct");
@@ -281,10 +339,10 @@
 			nameTag.classList.add("correct");
 			return true;
 		}
-	}
+	}	
 	function checkAddr2() {
 		var regex = /[가-힣]{1,200}/g;
-		var nameTag = document.getElementById("addr2");
+		var nameTag = document.getElementById("sample4_detailAddress");
 
 		var isName = regex.test(nameTag.value);
 		nameTag.classList.remove("correct");
@@ -297,7 +355,7 @@
 			nameTag.classList.add("correct");
 			return true;
 		}
-	}
+	}	
 	function checkPhone() {
 		var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
 		var phoneTag = document.getElementById("phone");
@@ -320,11 +378,9 @@
 		console.log("아이디" + checkCheckId());
 		console.log("이메일" + checkCheckEmail());
 		console.log("아이디" + checkPhone());
-		console.log("주소1" + checkAddr1());
-		console.log("주소2" + checkAddr2());
 		if (!checkCheckId() || !checkName() || !checkCheckEmail()
-				|| !checkPwd() || !checkCheckPw() || !checkAddr1()
-				|| !checkAddr2() || !checkPhone()) {
+				|| !checkPwd() || !checkCheckPw() || !checkAddr1() ||
+				!checkAddr2() || !checkPhone()) {
 			return false;
 		} else {
 
@@ -332,7 +388,7 @@
 		}
 	}
 </script>
-</script>
+
 <body class="h-100">
 
 	<!--*******************
@@ -418,19 +474,29 @@
 												일치합니다.</span> <span class="incorrect-message">비밀번호가 불일치합니다.</span>
 										</div>
 									</div>
-									<div class="form-group">
-										<input type="text"
-											class="form-control form-control-user intext" id="addr1"
-											name = "addr1" oninput="checkAddr1();" placeholder="기본주소를 입력해주세요">
-										<span class="correct-message">올바른 주소 형식입니다</span> <span
+									<div class="form-group row">
+										<div class="col-sm-6 mb-3 mb-sm-0">
+											<input type="text" id="sample4_roadAddress" class="form-control form-control-user intext" 
+											name="addr1" placeholder="주소 검색을 해주세요" oninput="checkAddr1();">
+											<span class="correct-message">올바른 주소 형식입니다</span> <span
 											class="incorrect-message">1글자 이상의 한글로 입력해주세요</span>
+										</div>		
+										<div class="col-sm-6 mb-3 mb-sm-0">
+											<input type="text" id="sample4_detailAddress" class="form-control form-control-user intext" 
+											name="addr2" placeholder="상세주소 입력해주세요" oninput="checkAddr2();">							
+											<span class="correct-message">올바른 주소 형식입니다</span> <span
+											class="incorrect-message">1글자 이상의 한글로 입력해주세요</span>
+										</div>
+											<input type="hidden" id="sample4_postcode" placeholder="우편번호">
+											<input type="hidden" id="sample4_jibunAddress" placeholder="지번주소">
+											<span id="guide" style="color:#999;display:none"></span>
+											<input type="hidden" id="sample4_extraAddress" placeholder="참고항목">
 									</div>
-									<div class="form-group">
-										<input type="text" class="form-control form-control intext "
-											oninput="checkAddr2();" name="addr2" id="addr2"
-											placeholder="상세주소를 입력해주세요"> <span
-											class="correct-message">올바른 주소 형식입니다</span> <span
-											class="incorrect-message">1글자 이상의 한글로 입력해주세요</span>
+									<div class="form-group row">
+										<button type="button" onclick="sample4_execDaumPostcode()" class="btn mb-1 btn-rounded btn-info">
+										<span class="btn-icon-left">
+										<i class="fa fa-plus color-info"></i> 
+									</span>주소 검색</button>				
 									</div>
 									<div class="form-group row">
 										<div class="col-sm-6 mb-3 mb-sm-0">
@@ -459,7 +525,7 @@
 										href="${pageContexxt.request.contextPath}/member/login.do"
 										class="text-primary">로그인 </a>
 								</p>
-								</p>
+
 							</div>
 						</div>
 					</div>

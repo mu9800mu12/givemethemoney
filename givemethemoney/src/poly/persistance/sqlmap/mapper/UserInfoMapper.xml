@@ -54,7 +54,7 @@ AND PASSWORD =#{member_pw}
 <delete id="clearMember">
 	<![CDATA[
 		DELETE FROM member WHERE member_approve='N' and member_auth in('staff','leader')
-		and member_sysdate < TO_CHAR(sysdate - 3, 'yyyy-mm-dd')
+		and member_sysdate < sysdate -5/24/60
 	]]>
 </delete>
 
@@ -67,5 +67,22 @@ AND PASSWORD =#{member_pw}
 		)
 </delete>
 <!--  -->
-			
+<update id="userUpdate" parameterType="MemberDTO">
+	update member set
+	member_name = #{member_name},
+	member_pw = #{member_pw},
+	member_phone = #{member_phone},
+	member_addr1 = #{member_addr1},
+	member_addr2 = #{member_addr2}
+	where member_no = #{member_no}
+</update>
+<select id="userInfo" parameterType="int" resultType="MemberDTO">
+	select * from member where member_no = #{member_no}
+</select>
+<delete id="userDelete" parameterType="int">
+	delete from member where member_no = #{member_no}
+</delete>
+<select id = "checkPassword" parameterType="MemberDTO" resultType="int">
+	select count(*) from member where member_no = #{member_no} and member_pw = #{member_pw}
+</select>
 </mapper>

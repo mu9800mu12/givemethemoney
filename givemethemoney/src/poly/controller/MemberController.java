@@ -42,7 +42,7 @@ public class MemberController {
 //	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
 //		return "/home";
 //	}
-	
+//<!-- 이름, 이메일, 아이디, 주소1,2, 폰, 팀 -->	
 	
 	
 	@RequestMapping(value = "member/login", method=RequestMethod.GET)
@@ -98,10 +98,10 @@ public class MemberController {
 		MemberDTO find_email = memberService.find_email(mDTO);
 		log.info("member_email : "+find_email );
 		String msg = "";
-		if(find_email== null) {
+		if(find_email==null) {
 			msg = "유효하지 않은 이메일입니다.";
 			model.addAttribute("msg", msg);
-			return "/member/msgToFindePassword";
+			return "redirect:findPassword.do?error=error";
 		}else {
 			log.info("이메일 찾기 컨트롤러 성공");
 			String ip = req.getRemoteAddr();
@@ -172,4 +172,5 @@ public class MemberController {
 			return "/member/changePassword";
 		}
 	}
+
 }

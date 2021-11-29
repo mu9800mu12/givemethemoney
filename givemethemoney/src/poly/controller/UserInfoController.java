@@ -27,7 +27,6 @@ public class UserInfoController {
 	@Resource(name = "UserInfoService")
 	private IUserInfoService userInfoService;
 
-
 	// 회원가입 화면으로 이동
 	@RequestMapping(value = "user/userRegForm")
 	public String userRegForm() {
@@ -41,7 +40,7 @@ public class UserInfoController {
 			throws Exception {
 		log.info(this.getClass().getName() + ".insertUserInfo start !");
 
-		UserInfoDTO pDTO =null;
+		UserInfoDTO pDTO = null;
 		String msg = "";
 
 		try {
@@ -77,16 +76,11 @@ public class UserInfoController {
 				msg = "회원가입되었습니다. 승인까지 최대 3일까지 기다려주세요. ";
 				userInfoService.clearMember();
 				/*
-				보규:
-				<delete id="clearMember">
-					<![CDATA[
-						DELETE FROM member WHERE member_approve='N' and member_auth in('staff','leader')
-						and member_sysdate < TO_CHAR(sysdate - 3, 'yyyy-mm-dd')  <--이 부분에서
-						걸리는 부분이 3일 이상 회원 가입을 안 하면 계속 Data가 남아 있은 문제가..
-						만약 하루하루 날자를 비교해서 3일 지나면 삭제하는 기능을 다른 방법 더 찾아보거나
-						차선으로 index나 home 쪽에서 박아버리는게 좋을 것 같습니다
-					]]>
-				</delete>
+				 * 보규: <delete id="clearMember"> <![CDATA[ DELETE FROM member WHERE
+				 * member_approve='N' and member_auth in('staff','leader') and member_sysdate <
+				 * TO_CHAR(sysdate - 3, 'yyyy-mm-dd') <--이 부분에서 걸리는 부분이 3일 이상 회원 가입을 안 하면 계속
+				 * Data가 남아 있은 문제가.. 만약 하루하루 날자를 비교해서 3일 지나면 삭제하는 기능을 다른 방법 더 찾아보거나 차선으로 index나
+				 * home 쪽에서 박아버리는게 좋을 것 같습니다 ]]> </delete>
 				 */
 			} else if (res == 2) {
 				msg = "이미 가입된 이메일 주소입니다.";
@@ -107,10 +101,10 @@ public class UserInfoController {
 
 		return "/msgToHome";
 	}
-	
-	//로그인을 위한 입력 화면으로 이동
-	
-	@RequestMapping(value="user/loginForm")
+
+	// 로그인을 위한 입력 화면으로 이동
+
+	@RequestMapping(value = "user/loginForm")
 	public String lgoinForm() {
 		log.info(this.getClass().getName() + ".user/loginForm ok !");
 		return "/user/LoginForm";
@@ -168,89 +162,80 @@ public class UserInfoController {
 
 		return "user/LoginResult";
 	}
-	
-	@RequestMapping(value="user/userInfo", method=RequestMethod.GET)
-	public String userInfo(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) throws Exception{
-		
-		log.info(this.getClass().getName()+" CHWUpdateInfo 페이지 띄움");
+
+	@RequestMapping(value = "user/userInfo", method = RequestMethod.GET)
+	public String userInfo(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model)
+			throws Exception {
+
+		log.info(this.getClass().getName() + " CHWUpdateInfo 페이지 띄움");
 		MemberDTO memberinfo = (MemberDTO) session.getAttribute("memberinfo");
 		model.addAttribute("memberinfo", memberinfo);
 		return "/user/userInfo";
 	}
-
-	@RequestMapping(value="user/userUpdate", method=RequestMethod.GET)
-	public String userUpdate(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) {
+	@RequestMapping(value = "user/checkPassword",method=RequestMethod.GET)
+	public String checkPassword(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) {
 		MemberDTO memberinfo = (MemberDTO)session.getAttribute("memberinfo");
+		model.addAttribute("memberinfo", memberinfo);
+		return "user/checkPassword";
+	}
+	@RequestMapping(value = "user/checkPassword", method=RequestMethod.POST)
+	public String checkPassword2(HttpServletRequest req, HttpServletResponse resp, ModelMap model) throws Exception {
+		int member_no =Integer.parseInt(req.getParameter("member_no"));
+		String member_pw = req.getParameter("member_pw");
+		MemberDTO mDTO = new MemberDTO();
+		mDTO.setMember_no(member_no);
+		mDTO.setMember_pw(EncryptUtil.encHashSHA256(member_pw));
+		log.info("member_no :" +member_no + "member_pw : " + member_pw);
+		int result = userInfoService.checkPassword(mDTO);
+		log.info("result  : "+ result);
+		if(result > 0) {
+			return "/user/userUpdate";
+		}else {
+			return "redirect:checkPassword.do?error=error";	
+		}		
+	}
+
+	@RequestMapping(value = "user/userUpdate", method = RequestMethod.GET)
+	public String userUpdate(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) {
+		MemberDTO memberinfo = (MemberDTO) session.getAttribute("memberinfo");
 		model.addAttribute("memberinfo", memberinfo);
 		return "/user/userUpdate";
 	}
-	@RequestMapping(value="user/userUpdate", method=RequestMethod.POST)
-	public String userUpdate(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+
+	@RequestMapping(value = "user/userUpdate", method = RequestMethod.POST)
+	public String userUpdate2(HttpServletRequest req, HttpServletResponse resp, HttpSession session, ModelMap model) throws Exception {
 		int member_no = Integer.parseInt(req.getParameter("member_no"));
 		String member_name = req.getParameter("member_name");
-		return "/user/userInfo";
-	}
-	/**
-	 * 멤버 회원정보 수정 문
-	 */
-	@RequestMapping(value = "CHW/CHWUpdate", method = RequestMethod.GET)
-	public String NoticeUpdate(HttpSession session, HttpServletRequest request, HttpServletResponse response,
-			ModelMap model) throws Exception {
-
-		log.info(this.getClass().getName() + "CHWUpdate start!");
-
+		String member_phone = req.getParameter("member_phone");
+		String member_pw = req.getParameter("member_pw");
+		String member_addr1 = req.getParameter("addr1");
+		String member_addr2 = req.getParameter("addr2");
+		MemberDTO mDTO = new MemberDTO();
+		mDTO.setMember_no(member_no);
+		mDTO.setMember_name(member_name);
+		mDTO.setMember_pw(EncryptUtil.encHashSHA256(member_pw));
+		mDTO.setMember_addr1(member_addr1);
+		mDTO.setMember_addr2(member_addr2);
+		mDTO.setMember_phone(member_phone);
+		int result = userInfoService.userUpdate(mDTO);
 		String msg = "";
-
-		try {
-			//세션이 자료형이 스트링이 아니라 강제로 스트링으로 넣어주는거야
-			//http 세션
-			//리퀘스트는 강제로 안 바꿔도 됨
-			//로그인할 떄 다른페이지갈 때 저장
-	/*int*/	String member_no = ((String) session.getAttribute("member_no")); // 팀 번호 pk
-			//자료가 
-			String member_name = CmmUtil.nvl(request.getParameter("member_name")); // 직원 이름
-			String member_addr1 = CmmUtil.nvl(request.getParameter("member_addr1")); // 리더 이름
-			String member_addr2 = CmmUtil.nvl(request.getParameter("member_addr2")); // 리더 이름
-			String member_pw = CmmUtil.nvl(request.getParameter("member_pw")); // 리더 이름
-			String member_phone = CmmUtil.nvl(request.getParameter("member_phone")); // 리더 이름
-
-			log.info("member_no : " + member_no);
-			log.info("member_name : " + member_name);
-			log.info("ember_addr1 : " + member_addr1);
-			log.info("ember_addr2 : " + member_addr2);
-			log.info("ember_pw : " + member_pw);
-			log.info("ember_phone : " + member_phone);
-
-			CHWDTO rDTO = new CHWDTO();
-
-			rDTO.setMember_no(Integer.parseInt(member_no));
-			rDTO.setMember_name(member_name);
-			rDTO.setMember_addr1(member_addr1);
-			rDTO.setMember_addr2(member_addr2);
-			rDTO.setMember_pw(member_pw);
-			rDTO.setMember_phone(member_phone);
-
-			// 게시글 수정하기 DB
-			CHWService.CHWUpdate(rDTO);
-
-			msg = "수정되었습니다.";
-
-			// 변수 초기화(메모리 효율화 시키기 위해 사용함)
-			rDTO = null;
-
-		} catch (Exception e) {
-			msg = "실패하였습니다. : " + e.toString();
-			log.info(e.toString());
-			e.printStackTrace();
-
-		} finally {
-			log.info(this.getClass().getName() + ".CHWUpdate end!");
-
-			// 결과 메시지 전달하기
-			model.addAttribute("msg", msg);
-
+		if (result > 0) {
+			msg = "회원정보가 수정되었습니다.";
+			MemberDTO memberinfo = userInfoService.userInfo(member_no);
+			session.setAttribute("memberinfo", memberinfo);
+		} else {
+			msg = "오류 발생했습니다.";	
 		}
+		model.addAttribute("msg", msg);
+		return "/user/msgToUserInfo";
+	}
 
-		return "/CHW/CHWUpdate";
-	}	
+	@RequestMapping(value = "user/userDelete", method=RequestMethod.GET)
+	public String userDelete(HttpServletRequest req, HttpServletResponse resp, ModelMap model) {
+		int member_no = Integer.parseInt(req.getParameter("member_no"));
+		userInfoService.userDelete(member_no);
+		String msg = "회원탈퇴가 완료되었습니다.";
+		model.addAttribute("msg", msg);
+		return "/user/msgToLogin";
+	}
 }

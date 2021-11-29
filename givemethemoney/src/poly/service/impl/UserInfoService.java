@@ -146,4 +146,31 @@ public class UserInfoService implements IUserInfoService {
 		userInfoMapper.clearMember();
 	}
 
+	@Override
+	public int userUpdate(MemberDTO mDTO) {
+		// TODO Auto-generated method stub
+		int result = userInfoMapper.userUpdate(mDTO);
+		return result;
+	}
+
+	@Override
+	public MemberDTO userInfo(int member_no) {
+		// TODO Auto-generated method stub
+		MemberDTO mDTO = userInfoMapper.userInfo(member_no);
+		return mDTO;
+	}
+
+	@Override
+	public void userDelete(int member_no) {
+		// TODO Auto-generated method stub
+		userInfoMapper.userDelete(member_no);
+	}
+
+	@Override
+	public int checkPassword(MemberDTO mDTO) {
+		// TODO Auto-generated method stub
+		int result = userInfoMapper.checkPassword(mDTO);
+		return result;
+	}
+
 }
