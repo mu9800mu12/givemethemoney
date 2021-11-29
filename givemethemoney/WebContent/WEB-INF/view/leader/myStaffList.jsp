@@ -21,7 +21,7 @@
 <body>
 <jsp:include page="/WEB-INF/view/templates/sidebar.jsp"></jsp:include>
 <%	
-	session.setAttribute("team_name", "1");
+
 	List<MemberDTO> mList = (List<MemberDTO>)request.getAttribute("mList");
 	if(mList == null){
 		mList = new ArrayList<MemberDTO>();

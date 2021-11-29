@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import poly.dto.CertDTO;
+import poly.dto.EventDTO;
 import poly.dto.MemberDTO;
 import poly.service.ICalenderService;
 import poly.service.ICertService;
@@ -20,9 +21,13 @@ import poly.service.IEmailService;
 import poly.service.IMemberService;
 import poly.util.EncryptUtil;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
 @Controller
 public class MemberController {
-	private Logger log = Logger.getLogger(this.getClass());
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	@Resource(name="MemberService")
 	private IMemberService memberService;
 	@Resource(name="EmailService")
@@ -41,22 +46,20 @@ public class MemberController {
 		return "redirect:getCalendarEvents.do";
 	}
 	
-//	@RequestMapping(value = "home")
-//	public String home(HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
-//		return "/home";
-//	}
-//<!-- 이름, 이메일, 아이디, 주소1,2, 폰, 팀 -->	
-	
-	
+
+//	이름, 이메일, 아이디, 주소1,2, 폰, 팀
 	@RequestMapping(value = "member/login", method=RequestMethod.GET)
 	public String login(HttpServletRequest req, HttpServletResponse resp) {
 		return "/member/login";
 	}
+
 	@RequestMapping(value = "member/login", method=RequestMethod.POST)
 	public String login(HttpServletRequest req, HttpServletResponse resp, HttpSession session,
 			ModelMap model) throws Exception {
+
 		if(session.getAttribute("memberinfo") !=null) {
 			session.removeAttribute("memberinfo");
+			//로그인 되어 있는 계정이 있으면 강제 로그 아웃 시키는 구문.
 		}
 		String member_id = req.getParameter("member_id");
 		String member_pw = req.getParameter("member_pw");
@@ -66,52 +69,35 @@ public class MemberController {
 		mDTO.setMember_pw(EncryptUtil.encHashSHA256(member_pw));
 		mDTO.setMember_id(member_id);
 		MemberDTO login = memberService.login(mDTO);
+		//한민 : member_id, member_pw를 받아서 일치하는 결과를 부분을 리턴, 결과는 아래와 같음
+		// member_no, member_auth, member_apporove, member_sysdate 을 가져옴.
 
 
-//		Byte[] stored_cred = iCalenderService.getStored_cred(member_info.getMember_no());
-		/*
-
-		맨 처음 로그인 승인 받은 후
-		로그인을 할 수 있어야지
-
-
-		byte가 null
-		DB에서 stored_cred가 있는지 없는지
-		비교
-		이면 구글 인증을 받아 와야한다
-
-		byte가 null이 아니면 바로 구글 캘린더로 직행
-
-
-		 */
 		String msg = "";
-		if(login != null) {
+		if(login != null) { //로그인 성공
+			MemberDTO member_info = null;
+			//미승인된 계정(member_apporve='N'이거나 member_auth="block"인 계정
 			if(login.getMember_approve().equals("N") || login.getMember_auth().equals("block")) {
 				msg = "승인 대기중이거나 블락된 계정입니다.";
-			}else if(login.getMember_auth()!="member"){//권한이 리더랑 마스터
-				MemberDTO mDtO = new MemberDTO();
-				mDTO.setMember_no(login.getMember_no());
-				MemberDTO member_info = iCalenderService.memberinfo(mDTO);
-				iCalenderService.interfaceGetCredentials(member_info);
+			}else {
+				log.info("처음 실행하는 리더, 마스터 로그인");
+				member_info = iCalenderService.memberinfo(login);
 				session.setAttribute("memberinfo", member_info);
 				msg = "로그인 성공했습니다.";
-				/*
-				여기
-				 */
-			}else{//권한이 스태프
 
+				model.addAttribute("msg", msg);
 			}
-			model.addAttribute("msg", msg);
-			return "/msgToHome";
+				return "/msgToHome";
 		}else {
 			return "redirect:login.do?error=error";
 		}
 	}
 	@RequestMapping(value = "member/logout")
 	public String logout(HttpServletRequest rep,HttpServletResponse resp, HttpSession session, ModelMap model) {
-		session.invalidate();
+		session.invalidate();//한민 : 모든 session 값을 무효화
+		iCalenderService.deleteCred();
 		String msg = "로그아웃했습니다.";
-		model.addAttribute("msg", msg);
+		model.addAttribute("msg", msg); // + 로그아웃 시 storedCredential 파일 삭제
 		return "/member/login";
 	}
 	@RequestMapping(value = "member/findPassword", method=RequestMethod.GET)

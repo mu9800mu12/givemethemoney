@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 
 import poly.dto.MemberDTO;
 import poly.persistance.mapper.ILeaderMapper;
+import poly.service.ICalenderService;
 import poly.service.ILeaderService;
 @Service("LeaderService")
 public class LeaderService implements ILeaderService{
 	@Resource(name="LeaderMapper")
 	private ILeaderMapper leaderMapper;
+	@Resource(name="CalendarService")
+	private ICalenderService iCalenderService;
 	@Override
 	public List<MemberDTO> staffList() throws Exception {
 		// TODO Auto-generated method stub

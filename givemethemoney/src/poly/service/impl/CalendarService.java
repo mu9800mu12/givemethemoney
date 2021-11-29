@@ -57,7 +57,10 @@ public class CalendarService implements ICalenderService {
     public static String ClientId = "";
     public static String ClientSecret = "";
 
-
+    /*
+    로그아웃 시
+    StoredCredential 삭제
+     */
     public void deleteCred(){
         dirMethod();
         File deleteCred = new File(TOKENS_DIRECTORY_PATH+"/StoredCredential");
@@ -73,12 +76,34 @@ public class CalendarService implements ICalenderService {
         }
     }
 
+
+    /*
+    param: member_no
+    return: int res
+    member_no쪽 blob 형 데이터를 NULL로 업데이트
+     */
+    public int removeCredDB(MemberDTO pDTO) throws IOException{
+        int res = 0;
+        log.info("인증 파일을 member_no: " + pDTO.getMember_no());
+        res = iMemberMapper.removeCredDB(pDTO);
+        return res;
+    }
+
+    /*
+    token 파일 저장 경로 설정
+     */
     public void dirMethod(){
         String rootPath = this.getClass().getResource("").getPath();
         log.info("\"resources/credentials.json\"을 \n"+rootPath+" <-하위에 위치시켜주세요.");
         TOKENS_DIRECTORY_PATH=rootPath+"resources/tokens";
         MemberDTO pDTO = new MemberDTO();
     }
+
+    /*
+    param: member_no
+    return: int res
+    member_no쪽 stored_cred컬럼에 Storedcredentials파일 업로드
+     */
     public int readCredData(MemberDTO pDTO) throws IOException {
         log.info(" 시작");
         dirMethod();
@@ -110,7 +135,7 @@ public class CalendarService implements ICalenderService {
             /*리더의 인증파일*/
             pDTO.setStored_cred(returnValue);
             /*리더의 이메일*/
-            log.info("인증 파일을 저장할 email: " + pDTO.getMember_email());
+            log.info("인증 파일이 저장될 MEEBER_NO: " + pDTO.getMember_no());
             res = iMemberMapper.upcCred(pDTO);
             log.info("로컬에 저장된 인증파일 DB에 update 완료");
 
@@ -137,13 +162,12 @@ public class CalendarService implements ICalenderService {
             return res;
         }
     }
-    public int removeCredDB(MemberDTO pDTO) throws IOException{
-        int res = 0;
-        log.info("인증 파일을 삭제할 이메일: " + pDTO.getMember_email());
-        res = iMemberMapper.removeCredDB(pDTO);
-        return res;
-    }
-    /*DB에서 읽어와서 로컬에 저장 "/StoredCredentialDB" */
+
+    /*
+    param: member_no
+    return: int res
+    member_no쪽 stored_cred컬럼에 blob형 데이터를 로컬에 Storedcredential 파일로 저장
+     */
     public void writeCredData(MemberDTO pDTO) throws IOException {
         log.info(" 시작");
         FileOutputStream fos = null;
@@ -153,9 +177,10 @@ public class CalendarService implements ICalenderService {
              * byte[] array에 담고
              * bais에 입력시켜
              * */
-            log.info("조회할 email: " + pDTO.getMember_email());
+            log.info("조회할 member_no: " + pDTO.getMember_no());
             rDTO = iMemberMapper.storeCredFromDB(pDTO);
             byte[] fileByte = rDTO.getStored_cred();
+            log.info("토큰 경로는: " + TOKENS_DIRECTORY_PATH);
             log.info("인증 파일 저장 경로 \n" + TOKENS_DIRECTORY_PATH+"/StoredCredential");
             fos = new FileOutputStream(TOKENS_DIRECTORY_PATH+"/StoredCredential");
             fos.write(fileByte);
@@ -180,24 +205,6 @@ public class CalendarService implements ICalenderService {
     public Credential getCredentials(NetHttpTransport HTTP_TRANSPORT) throws IOException {
         log.info("start");
         dirMethod();
-
-
-        MemberDTO pDTO = new MemberDTO();
-        pDTO.setMember_email("kjj6393@gmail.com");
-        readCredData(pDTO);
-        writeCredData(pDTO);
-//        log.info("크래딧 인서트 실행");
-//        readCredData();
-//        log.info("크래딧 인서트 종료");
-
-
-        log.info("크래딧 삭제 실행");
-        /*잠깐 주석 처리*/
-//        log.info("삭제 실행 결과: "+removeCredDB(pDTO));
-        log.info("크래딧 삭제 완료");
-
-
-
         InputStream in = CalendarService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
 
 
@@ -225,23 +232,58 @@ public class CalendarService implements ICalenderService {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public void interfaceGetCredentials(MemberDTO pDTO) throws IOException, GeneralSecurityException {
-        log.info("나는 interfaceGetCredentials");
-        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName("applicationName").build();
+    /*
+    param:  member_no
+    return: List<EventDTO>
+    처음 로그인하는 승인된 리더와 마스터의 인증파일을 로컬에 저장하고 DB에 올리고
+    캘린더 이벤트 정보를 리턴
+     */
+    @Override
+    public List<EventDTO> firstGetCredentials(MemberDTO pDTO) throws IOException, GeneralSecurityException {
+        log.info("나는 firstGetCredentials");
 
-        readCredData(pDTO);
+        dirMethod();
+        /*
+        처음 실행 시
+        구글 권한 인증 리다이렉트
+        StoredCredential 파일 생성 및 캘린더 연동 결과 리턴
+         */
+        List<EventDTO> rlist = eventShow();
 
+        /*
+        pDTO에 포함된 member_id로 StoredCredential파일을 DB업로드
+         */
+        int res = readCredData(pDTO);
+        log.info("firstGetCredentials 끝, 결과는 " + res);
+        return rlist;
+    }
 
+    /*
+    param: member_no
+    return List<EventDTO>
+    DB에 인증파일을 로컬에 저장한 후
+    그것을 통해 캘린더 이벤트를 반환
+     */
+    @Override
+    public List<EventDTO> getCredentialsAtLocal(MemberDTO pDTO) throws IOException, GeneralSecurityException{
+        log.info("나는 getCredentialsAtLocal ");
+
+        dirMethod();
+        /*
+        member_no로 stored_cred 조회를 한 후 로컬에 저장
+         */
+        writeCredData(pDTO);
+        /*
+        로컬에 저장된 인증 파일로 캘린더 리스트 반환
+         */
+        List<EventDTO> rlist = eventShow();
+
+        log.info("getCredentialsAtLocal 종료");
+
+        return rlist;
     }
 
     @Override
-    public MemberDTO memberinfo(MemberDTO mDTO) {
-        return iMemberMapper.memberinfo(mDTO);
-    }
-
-
     public void insertEvent(EventDTO pDTO) throws IOException, GeneralSecurityException {
 
 
@@ -329,6 +371,70 @@ public class CalendarService implements ICalenderService {
 
         log.info("예약끝");
     }
+
+
+    public List<EventDTO> eventShow() throws IOException, GeneralSecurityException {
+        log.info("start !");
+
+
+
+        List<EventDTO> list = new ArrayList<EventDTO>();
+
+        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
+        // Initialize Calendar service with valid OAuth credentials
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName("applicationName").build();
+
+        DateTime now = new DateTime(System.currentTimeMillis());
+        Events events = service.events().list("primary")
+                .setMaxResults(10)
+                .setTimeMin(now)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+        int i = 0;
+        List<Event> items = events.getItems();
+        if (items.isEmpty()) {
+            System.out.println("No upcoming events found.");
+        } else {
+            System.out.println("Upcoming events");
+            for (Event event : items) {
+                EventDTO pDTO = new EventDTO();
+                DateTime start = event.getStart().getDateTime();
+                DateTime end = event.getEnd().getDateTime();
+                if (start == null) {
+                    start = event.getStart().getDate();
+                }
+
+
+                pDTO.setId(CmmUtil.nvl(event.getId()));
+//                pDTO.setDescription(CmmUtil.nvl(event.getDescription()));
+                pDTO.setTitle(CmmUtil.nvl(event.getSummary()));
+                pDTO.setStart(CmmUtil.nvl(start.toString()));
+                pDTO.setEnd(CmmUtil.nvl(end.toString()));
+                list.add(pDTO);
+                pDTO = null;
+//                log.info(event.getStart()+"::" +event.getEnd()+"::"+event.getSummary());
+
+
+            }
+        }
+//        for(i= 0; i< list.size(); i++){
+//            log.info("list에 값이 잘 담겼나?" + list.get(i).getStart());
+//        }
+
+        log.info("end !");
+
+        return list;
+    }
+
+
+    @Override
+    public MemberDTO memberinfo(MemberDTO mDTO) {
+        return iMemberMapper.memberinfo(mDTO);
+    }
+
 
     public void getCalendarList() throws IOException, GeneralSecurityException{
         log.info(this.getClass().getName() + "getCalendarList start!");
@@ -431,7 +537,6 @@ public class CalendarService implements ICalenderService {
          */
         log.info(this.getClass().getName() + "getCalendarList end!");
     }
-
     public String showAccRUle() throws IOException, GeneralSecurityException{
         // Retrieve access rule
 //        AclRule rule = service.acl().get("2120110005@gspace.kopo.ac.kr", "ruleId").execute();
@@ -439,6 +544,7 @@ public class CalendarService implements ICalenderService {
 //        System.out.println(rule.getId() + ": " + rule.getRole());
 
         // Initialize Calendar service with valid OAuth credentials
+
         NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName("applicationName").build();
@@ -477,63 +583,6 @@ public class CalendarService implements ICalenderService {
          */
         return "";
     }
-
-    public List<EventDTO> eventShow() throws IOException, GeneralSecurityException {
-        log.info("start !");
-
-
-
-        List<EventDTO> list = new ArrayList<EventDTO>();
-
-        NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-
-        // Initialize Calendar service with valid OAuth credentials
-        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName("applicationName").build();
-
-        DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = service.events().list("primary")
-                .setMaxResults(10)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        int i = 0;
-        List<Event> items = events.getItems();
-        if (items.isEmpty()) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
-            for (Event event : items) {
-                EventDTO pDTO = new EventDTO();
-                DateTime start = event.getStart().getDateTime();
-                DateTime end = event.getEnd().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
-
-
-                pDTO.setId(CmmUtil.nvl(event.getId()));
-//                pDTO.setDescription(CmmUtil.nvl(event.getDescription()));
-                pDTO.setTitle(CmmUtil.nvl(event.getSummary()));
-                pDTO.setStart(CmmUtil.nvl(start.toString()));
-                pDTO.setEnd(CmmUtil.nvl(end.toString()));
-                list.add(pDTO);
-                pDTO = null;
-//                log.info(event.getStart()+"::" +event.getEnd()+"::"+event.getSummary());
-
-
-            }
-        }
-//        for(i= 0; i< list.size(); i++){
-//            log.info("list에 값이 잘 담겼나?" + list.get(i).getStart());
-//        }
-
-        log.info("end !");
-
-        return list;
-    }
-
     public String testSample(String... args) throws IOException, GeneralSecurityException {
 
         NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();

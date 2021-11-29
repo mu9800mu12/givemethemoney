@@ -51,10 +51,10 @@ FROM MEMBER
 WHERE MEMBER_ID =#{member_id}
 AND PASSWORD =#{member_pw}
 </select>
-<delete id="clearMember">
+<delete id="clearMember"> <!-- 한민 in 사용방법 -->
 	<![CDATA[
 		DELETE FROM member WHERE member_approve='N' and member_auth in('staff','leader')
-		and member_sysdate < sysdate -5/24/60
+		and member_sysdate < sysdate -10/24/60
 	]]>
 </delete>
 

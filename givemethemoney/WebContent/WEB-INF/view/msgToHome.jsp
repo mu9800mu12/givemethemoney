@@ -1,4 +1,7 @@
 <%@page import="poly.util.CmmUtil"%>
+<%@ page import="poly.dto.EventDTO" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -10,6 +13,8 @@
 <body>
 <%
 	String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
+%>
+<%
 %>
 <script>
 	alert("<%=msg%>");

@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface ICalenderService {
 
-	String testSample(String... args) throws IOException, GeneralSecurityException;
-	void getCalendarList() throws IOException, GeneralSecurityException;
-	List<EventDTO> eventShow() throws IOException, GeneralSecurityException;
+	MemberDTO memberinfo(MemberDTO mDTO);
 	void insertEvent(EventDTO pDTO) throws IOException, GeneralSecurityException;
 	void deleteEvent(String event_id) throws IOException, GeneralSecurityException;
 	void updateEvent(EventDTO pDTO) throws IOException, GeneralSecurityException;
-	void interfaceGetCredentials(MemberDTO mDTO) throws IOException, GeneralSecurityException;
 
-	MemberDTO memberinfo(MemberDTO mDTO);
+	void deleteCred();
+	int removeCredDB(MemberDTO pDTO) throws IOException;
+	List<EventDTO> firstGetCredentials(MemberDTO pDTO) throws IOException, GeneralSecurityException;
+	List<EventDTO> getCredentialsAtLocal(MemberDTO pDTO) throws IOException, GeneralSecurityException;
 }
