@@ -54,7 +54,10 @@ public class CalendarController {
         String[] week = request.getParameterValues("week");
         String need_staff = CmmUtil.nvl(request.getParameter("need_staff"), "0");
         String now_staff = CmmUtil.nvl(request.getParameter("now_staff"),"0");
+        /*
 
+        커밋 test
+         */
 
         String days ="";
         for (String day:week) {
