@@ -390,6 +390,16 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
+                                        	<label class="col-lg-4 col-form-label" for="val-website"><span class="text-danger"></span>
+                                            </label>
+                                        	<div class="col-lg-6">
+                                        	<button type="button" onclick="sample4_execDaumPostcode()" class="btn mb-1 btn-rounded btn-info">
+											<span class="btn-icon-left">
+											<i class="fa fa-plus color-info"></i> 
+											</span>주소 검색</button>		
+                                        	</div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val-phoneus">상세주소 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
@@ -402,12 +412,6 @@
 											<input type="hidden" id="sample4_jibunAddress" placeholder="지번주소">
 											<span id="guide" style="color:#999;display:none"></span>
 											<input type="hidden" id="sample4_extraAddress" placeholder="참고항목">
-										<div class="form-group">
-											<button type="button" onclick="sample4_execDaumPostcode()" class="btn mb-1 btn-rounded btn-info">
-											<span class="btn-icon-left">
-											<i class="fa fa-plus color-info"></i> 
-											</span>주소 검색</button>				
-										</div>
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-lg-8 ml-auto">
