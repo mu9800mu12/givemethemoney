@@ -15,10 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import poly.dto.CertDTO;
 import poly.dto.EventDTO;
 import poly.dto.MemberDTO;
-import poly.service.ICalenderService;
-import poly.service.ICertService;
-import poly.service.IEmailService;
-import poly.service.IMemberService;
+import poly.service.*;
 import poly.util.EncryptUtil;
 
 import java.util.Iterator;
@@ -36,6 +33,8 @@ public class MemberController {
 	private ICertService certService;
 	@Resource(name="CalendarService")
 	private ICalenderService iCalenderService;
+	@Resource(name="LeaderService")
+	private ILeaderService iLeaderService;
 
 	
 	@RequestMapping(value = "home")
@@ -50,6 +49,8 @@ public class MemberController {
 //	이름, 이메일, 아이디, 주소1,2, 폰, 팀
 	@RequestMapping(value = "member/login", method=RequestMethod.GET)
 	public String login(HttpServletRequest req, HttpServletResponse resp) {
+		/*기존에 로그인 되어 있던 계정의 인증서가 남아있을 수 있기 떄문에 인증서 제거 함수 호출*/
+
 		return "/member/login";
 	}
 
@@ -57,10 +58,13 @@ public class MemberController {
 	public String login(HttpServletRequest req, HttpServletResponse resp, HttpSession session,
 			ModelMap model) throws Exception {
 
+
+		iCalenderService.deleteCred();
 		if(session.getAttribute("memberinfo") !=null) {
 			session.removeAttribute("memberinfo");
 			//로그인 되어 있는 계정이 있으면 강제 로그 아웃 시키는 구문.
 		}
+
 		String member_id = req.getParameter("member_id");
 		String member_pw = req.getParameter("member_pw");
 		log.info("member_id : "+ member_id);
@@ -77,16 +81,38 @@ public class MemberController {
 		if(login != null) { //로그인 성공
 			MemberDTO member_info = null;
 			//미승인된 계정(member_apporve='N'이거나 member_auth="block"인 계정
-			if(login.getMember_approve().equals("N") || login.getMember_auth().equals("block")) {
+
+			if (login.getMember_approve().equals("N") || login.getMember_auth().equals("block")) {
+				/*
+				staff N
+				leader N
+				block
+				 */
 				msg = "승인 대기중이거나 블락된 계정입니다.";
-			}else {
+			} else if (login.getMember_auth().equals("staff") && Objects.isNull(login.getStored_cred())) {
+				/*
+				staff Y null
+				 */
+				msg = "인증 정보가 올바르지 않습니다.\n재승인이 필요합니다.";
+				String reslog = (1 == iLeaderService.deleteStaff(login)) ? "\n팀원 삭제를 성공적으로 마쳤습니다." :"\n팀원을 삭제할 수 없습니다.";
+				log.info(reslog);
+				msg+=reslog;
+			}
+			else {
+				/*
+				로그인 실행 권한과 범위
+				staff Y blob
+				leader Y blob
+				leader Y null
+				master Y blob
+				master Y null
+				 */
 				log.info("처음 실행하는 리더, 마스터 로그인");
 				member_info = iCalenderService.memberinfo(login);
 				session.setAttribute("memberinfo", member_info);
 				msg = "로그인 성공했습니다.";
-
-				model.addAttribute("msg", msg);
 			}
+				model.addAttribute("msg", msg);
 				return "/msgToHome";
 		}else {
 			return "redirect:login.do?error=error";

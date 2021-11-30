@@ -62,6 +62,7 @@ public class CalendarService implements ICalenderService {
     StoredCredential 삭제
      */
     public void deleteCred(){
+        log.info("인증서 제거를 시작합니다.");
         dirMethod();
         File deleteCred = new File(TOKENS_DIRECTORY_PATH+"/StoredCredential");
         /*만약 해당 경로에 파일이 존재한다면*/

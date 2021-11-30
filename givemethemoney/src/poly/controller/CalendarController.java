@@ -39,13 +39,27 @@ public class CalendarController {
         log.info(login.getMember_auth()+ "권한의 "+ login.getMember_id()+"가 캘린더에 접속합니다.");
         List<EventDTO> rlist =  null;
 
-       if (login.getMember_auth() != "member" && Objects.isNull(login.getStored_cred())) {
+
+
+
+
+
+       if (Objects.isNull(login.getStored_cred())) {
             log.info("처음 실행하는 리더, 마스터 로그인");
+           /*
+            leader N null
+            master N null
+            */
             //권한이 리더랑 마스터이고 처음 로그인 할 떄 실행
             //DB에 blob형은 null 허용이고, 초기값이 null이기 때문에 Objects.isNull()사용
             rlist = iCalenderService.firstGetCredentials(login);
         } else {
             log.info("스탭, 또는 마스터나 리더의 첫번째 이후 로그인");
+            /*
+            staff Y blob
+            leader Y blob
+            master Y blob
+             */
             rlist = iCalenderService.getCredentialsAtLocal(login);
         }
        model.addAttribute("showSchedule", rlist);

@@ -190,7 +190,7 @@
                                     now_staff: now_staff,
                                     need_staff: need_staff
                                 });
-                                info.event.remove();
+                               // info.event.remove();
 
                                 alert(new_title + "으로 예약중입니다.");
                                 setTimeout(function () {
