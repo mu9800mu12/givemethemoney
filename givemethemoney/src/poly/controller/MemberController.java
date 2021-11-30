@@ -78,9 +78,14 @@ public class MemberController {
 
 
 		String msg = "";
-		if(login != null) { //로그인 성공
+		if (login != null) { //로그인 성공
 			MemberDTO member_info = null;
 			//미승인된 계정(member_apporve='N'이거나 member_auth="block"인 계정
+			log.info("로그인 요청한 Id: "+login.getMember_id());
+			log.info("권한 : " +login.getMember_auth());
+			log.info("서버 인증서가 NULL : " +Objects.isNull(login.getStored_cred()));
+
+
 
 			if (login.getMember_approve().equals("N") || login.getMember_auth().equals("block")) {
 				/*
@@ -93,12 +98,11 @@ public class MemberController {
 				/*
 				staff Y null
 				 */
-				msg = "인증 정보가 올바르지 않습니다.\n재승인이 필요합니다.";
-				String reslog = (1 == iLeaderService.deleteStaff(login)) ? "\n팀원 삭제를 성공적으로 마쳤습니다." :"\n팀원을 삭제할 수 없습니다.";
+				msg = "인증 정보가 올바르지 않습니다. 재승인이 필요합니다.";
+				String reslog= (1 == iLeaderService.deleteStaff(login)) ? "\n팀원 삭제를 성공적으로 마쳤습니다." : "\n팀원을 삭제할 수 없습니다.";
 				log.info(reslog);
-				msg+=reslog;
-			}
-			else {
+			} else {
+				log.info("성공적인 로그인");
 				/*
 				로그인 실행 권한과 범위
 				staff Y blob
@@ -107,16 +111,13 @@ public class MemberController {
 				master Y blob
 				master Y null
 				 */
-				log.info("처음 실행하는 리더, 마스터 로그인");
 				member_info = iCalenderService.memberinfo(login);
 				session.setAttribute("memberinfo", member_info);
 				msg = "로그인 성공했습니다.";
 			}
-				model.addAttribute("msg", msg);
-				return "/msgToHome";
-		}else {
-			return "redirect:login.do?error=error";
-		}
+			model.addAttribute("msg", msg);
+			return "/msgToHome";
+		} else {return "redirect:login.do?error=error";}
 	}
 	@RequestMapping(value = "member/logout")
 	public String logout(HttpServletRequest rep,HttpServletResponse resp, HttpSession session, ModelMap model) {
