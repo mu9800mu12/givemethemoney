@@ -4,7 +4,11 @@
 <mapper namespace="poly.persistance.mapper.IMemberMapper">
 	<select id = "login" parameterType="MemberDTO" resultType="MemberDTO">
 		select 
-		*
+			member_no,
+		    member_auth,
+		    member_approve,
+		    member_sysdate,
+			STORED_CRED
 		from member m
 		where member_id=#{member_id} and member_pw=#{member_pw}
 	</select>
@@ -24,17 +28,25 @@
 	<update id="upcCred" parameterType="MemberDTO">
 		UPDATE MEMBER
 		SET STORED_CRED = #{stored_cred}
-		WHERE MEMBER_APPROVE='Y' AND MEMBER_EMAIL = #{member_email}
+		WHERE MEMBER_APPROVE='Y' AND MEMBER_NO = ${member_no}
 	</update>
+
 	<update id="removeCredDB" parameterType="MemberDTO">
 		UPDATE MEMBER
 		SET STORED_CRED = null
-		WHERE MEMBER_EMAIL = #{member_email}
+		WHERE MEMBER_NO = ${member_no}
 	</update>
 
 	<select id="storeCredFromDB" parameterType="MemberDTO" resultType="MemberDTO">
 		SELECT STORED_CRED
 		FROM MEMBER
-		WHERE MEMBER_EMAIL = #{member_email}
+		WHERE MEMBER_NO = ${member_no}
 	</select>
+
+	<select id="memberinfo" parameterType="MemberDTO" resultType="MemberDTO">
+		SELECT *
+		FROM MEMBER
+		WHERE MEMBER_NO = #{member_no}
+	</select>
+
 </mapper>

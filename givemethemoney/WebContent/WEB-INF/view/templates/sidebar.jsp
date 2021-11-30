@@ -131,28 +131,20 @@
                             <li><a href="${pageContext.request.contextPath}/getCalendarEvents.do">캘린더</a></li>                            
                         </ul>
                     </li>
-                    <c:choose>
-                    	<c:when test="${memberinfo.member_auth ne 'staff'}">
+
                     <li class="mega-menu mega-menu-sm">
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-globe-alt menu-icon"></i><span class="nav-text">인사 관리</span>
                         </a>
                         <ul aria-expanded="false">
-                        	<c:choose>
-                        		<c:when test="${memberinfo.member_auth eq 'leader'}">
                             <li><a href="${pageContext.request.contextPath}/leader/staffList.do">직원 리스트</a></li>
                             <li><a href="${pageContext.request.contextPath}/leader/myStaffList.do">팀원 리스트</a></li>
                             <li><a href="${pageContext.request.contextPath}/leader/blockList.do">블락 리스트</a></li>
-                        		</c:when>
-                        		<c:when test="${memberinfo.member_auth eq 'master'}">
                             <li><a href="${pageContext.request.contextPath}/leader/blockList.do">블락 리스트</a></li>
                             <li><a href="${pageContext.request.contextPath}/master/leaderList.do">리더 리스트</a></li>
-                        		</c:when>
-                        	</c:choose>
+
                         </ul>
                    </li>
-                    	</c:when>
-                    </c:choose>
 
                     <li class="nav-label">Pages</li>
                     <li>
